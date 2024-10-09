@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Spot, SpotAmenity, Amenity } = require("../db/models");
+const { Spot, SpotAmenity, Amenity } = require("../../db/models");
 
 // Get all amenities
 router.get("/", async (req, res) => {

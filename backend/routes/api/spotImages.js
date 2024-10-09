@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Spot, SpotImage } = require("../db/models");
+const { Spot, SpotImage } = require("../../db/models");
 
 // Add an image to a spot
 router.post("/:spotId/images", async (req, res) => {

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Country, Spot } = require("../db/models");
+const { Country, Spot } = require("../../db/models");
 
 // Get all countries
 router.post("/", async (req, res) => {

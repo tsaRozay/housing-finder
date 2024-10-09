@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Spot, Review } = require("../db/models");
+const { Spot, Review } = require("../../db/models");
 
 // Add a review to a spot
 router.post("/:spotId/reviews", async (req, res) => {

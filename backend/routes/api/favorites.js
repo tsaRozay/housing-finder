@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, Favorite } = require("../db/models");
+const { User, Favorite } = require("../../db/models");
 
 // Add a spot to favorites for a user
 router.post("/:userId/favorites", async (req, res) => {
