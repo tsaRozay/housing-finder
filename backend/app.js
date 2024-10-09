@@ -8,7 +8,6 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const { environment } = require("./config");
 const isProduction = environment === "production";
-const routes = require("./routes");
 const { ValidationError } = require("sequelize");
 
 const app = express();
@@ -51,7 +50,7 @@ app.use(
 app.use(routes);
 
 // Importing routes
-const favoritesRoute = require("./api/favorites");
+const favoritesRoute = require("./routes/api/favorites");
 const countriesRoutes = require("./api/countries");
 const amenitiesRoutes = require("./api/amenities");
 const bookingsRoute = require("./api/bookings");

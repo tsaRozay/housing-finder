@@ -2,7 +2,6 @@
 const express = require("express");
 const router = express.Router();
 const apiRouter = require("./api"); // Import the main API router
-const app = require("../app");
 
 
 // Use the API router for the main API routes
