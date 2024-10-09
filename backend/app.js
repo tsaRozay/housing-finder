@@ -51,13 +51,13 @@ app.use(routes);
 
 // Importing routes
 const favoritesRoute = require("./routes/api/favorites");
-const countriesRoutes = require("./api/countries");
-const amenitiesRoutes = require("./api/amenities");
-const bookingsRoute = require("./api/bookings");
-const reviewsRoute = require("./api/reviews");
-const spotImagesRoute = require("./api/spotImages");
-const spotsRoute = require("./api/spots");
-const usersRoute = require("./api/users");
+const countriesRoutes = require("./routes/api/countries");
+const amenitiesRoutes = require("./routes/api/amenities");
+const bookingsRoute = require("./routes/api/bookings");
+const reviewsRoute = require("./routes/api/reviews");
+const spotImagesRoute = require("./routes/api/spotImages");
+const spotsRoute = require("./routes/api/spots");
+const usersRoute = require("./routes/api/users");
 
 
 //Using routes
