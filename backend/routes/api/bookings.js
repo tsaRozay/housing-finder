@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Spot, Booking } = require("../db/models");
+const { Spot, Booking } = require("../../db/models");
 
 // Get all bookings
 router.get("/", async (req, res) => {
