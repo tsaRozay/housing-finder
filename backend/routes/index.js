@@ -24,13 +24,13 @@ router.get("/hello/world", function (req, res) {
 });
 
 // Using routes
-app.use("/favorites", favoritesRoute);
-app.use("/countries", countriesRoutes);
-app.use("/amenities", amenitiesRoutes);
-app.use("/bookings", bookingsRoute);
-app.use("/reviews", reviewsRoute);
-app.use("/spotImages", spotImagesRoute);
-app.use("/spots", spotsRoute);
-app.use("/users", usersRoute);
+// app.use("/favorites", favoritesRoute);
+// app.use("/countries", countriesRoutes);
+// app.use("/amenities", amenitiesRoutes);
+// app.use("/bookings", bookingsRoute);
+// app.use("/reviews", reviewsRoute);
+// app.use("/spotImages", spotImagesRoute);
+// app.use("/spots", spotsRoute);
+// app.use("/users", usersRoute);
 
 module.exports = router;
