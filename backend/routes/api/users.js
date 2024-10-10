@@ -29,8 +29,6 @@ router.get("/current", async (req, res) => {
     }
 });
 
-
-
 // Sign up
 router.post(
     '/',
