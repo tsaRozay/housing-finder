@@ -4,8 +4,8 @@ const { Spot, SpotImage } = require("../../db/models");
 
 // Add an image to a spot
 router.post("/:spotId/images", async (req, res) => {
-    const { imageUrl } = req.body;
     try {
+        const { imageUrl } = req.body;
         const spot = await Spot.findByPk(req.params.spotId);
         if (spot) {
             const newImage = await SpotImage.create({

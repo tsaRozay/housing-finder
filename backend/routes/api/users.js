@@ -12,10 +12,25 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Create a new user (Sign Up)
-router.post("/", async (req, res) => {
-    const { email, password, username } = req.body;
+// Get current user
+router.get("/current", async (req, res) => {
     try {
+        const userId = req.user.id;
+        const user = await User.findByPk(userId);
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(404).json({ message: "User not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Create a new user (Sign Up)
+router.post("/signup", async (req, res) => {
+    try {
+        const { email, password, username } = req.body;
         const newUser = await User.create({ email, password, username });
         res.status(201).json(newUser);
     } catch (error) {
@@ -39,8 +54,8 @@ router.get("/:id", async (req, res) => {
 
 // Update user profile
 router.patch("/:id", async (req, res) => {
-    const { email, username } = req.body;
     try {
+        const { email, username } = req.body;
         const user = await User.findByPk(req.params.id);
         if (user) {
             await user.update({ email, username });
@@ -55,8 +70,8 @@ router.patch("/:id", async (req, res) => {
 
 // Login user
 router.post("/login", async (req, res) => {
-    const { email, password } = req.body;
     try {
+        const { email, password } = req.body;
         const user = await User.findOne({ where: { email } });
         if (user && user.password === password) {
             res.json({ message: "Login successful", user });

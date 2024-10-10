@@ -14,10 +14,21 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Create a new spot
-router.post("/", async (req, res) => {
-    const { name, description, price, countryId, userId } = req.body;
+// Get all spots owned by the current user
+router.get("/current", async (req, res) => {
     try {
+        const userId = req.user.id;
+        const spots = await Spot.findAll({ where: { ownerId: userId } });
+        res.json(spots);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Create a new spot, might need to change userId to ownerId later
+router.post("/", async (req, res) => {
+    try {
+        const { name, description, price, countryId, userId } = req.body;
         const newSpot = await Spot.create({
             name,
             description,
@@ -31,7 +42,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-// Get a spot by ID
+// Get details of a spot from an id
 router.get("/:id", async (req, res) => {
     try {
         const spot = await Spot.findByPk(req.params.id, {
@@ -47,10 +58,10 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Update spot details
+// Edit spot details
 router.patch("/:id", async (req, res) => {
-    const { name, description, price } = req.body;
     try {
+        const { name, description, price } = req.body;
         const spot = await Spot.findByPk(req.params.id);
         if (spot) {
             await spot.update({ name, description, price });
@@ -60,6 +71,40 @@ router.patch("/:id", async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ message: "Error updating spot" });
+    }
+});
+
+// Add an image to a spot
+router.post("/:spotId/images", async (req, res) => {
+    try {
+        const { imageUrl } = req.body;
+        const spot = await Spot.findByPk(req.params.spotId);
+        if (spot) {
+            const newImage = await SpotImage.create({
+                spotId: spot.id,
+                imageUrl,
+            });
+            res.status(201).json(newImage);
+        } else {
+            res.status(404).json({ message: "Spot not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Delete a spot
+router.delete("/:id", async (req, res) => {
+    try {
+        const spot = await Spot.findByPk(req.params.id);
+        if (spot) {
+            await spot.destroy();
+            res.status(204).json({ message: "Spot deleted successfully" });
+        } else {
+            res.status(404).json({ message: "Spot not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
