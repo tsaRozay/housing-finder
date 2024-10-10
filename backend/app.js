@@ -1,5 +1,5 @@
 const express = require("express");
-const routes = require('./routes')
+const routes = require("./routes");
 require("express-async-errors");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -11,7 +11,6 @@ const isProduction = environment === "production";
 const { ValidationError } = require("sequelize");
 
 const app = express();
-
 
 // Logging middleware
 app.use(morgan("dev"));
@@ -59,7 +58,6 @@ const spotImagesRoute = require("./routes/api/spotImages");
 const spotsRoute = require("./routes/api/spots");
 const usersRoute = require("./routes/api/users");
 
-
 //Using routes
 app.use("/favorites", favoritesRoute);
 app.use("/countries", countriesRoutes);
@@ -104,6 +102,5 @@ app.use((err, _req, res, _next) => {
         stack: isProduction ? null : err.stack,
     });
 });
-
 
 module.exports = app;
