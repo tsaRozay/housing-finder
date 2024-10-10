@@ -15,8 +15,31 @@ router.get("/", async (req, res) => {
     }
 });
 
+// Get all current user's bookings
+router.get("/current", async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const bookings = await Booking.findAll({ where: { userId } });
+        res.json(bookings);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get all bookings for a spot
+router.get("/spots/:spotId/bookings", async (req, res) => {
+    try {
+        const bookings = await Booking.findAll({
+            where: { spotId: req.params.spotId },
+        });
+        res.json(bookings);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Create a booking for a spot
-router.post("/:spotId/bookings", async (req, res) => {
+router.post("/spots/:spotId/bookings", async (req, res) => {
     try {
         const { startDate, endDate, userId } = req.body;
         const spot = await Spot.findByPk(req.params.spotId);
@@ -41,7 +64,7 @@ router.post("/:spotId/bookings", async (req, res) => {
 });
 
 // Edit a booking
-router.patch("/:id", async (req, res) => {
+router.patch("/bookings/:id", async (req, res) => {
     try {
         const booking = await Booking.findByPk(req.params.id);
 
@@ -60,14 +83,14 @@ router.patch("/:id", async (req, res) => {
     }
 });
 
-// Cancel a booking
-router.delete("/:id", async (req, res) => {
+// Delete a booking
+router.delete("/bookings/:id", async (req, res) => {
     try {
         const booking = await Booking.findByPk(req.params.id);
 
         if (booking) {
             await booking.destroy();
-            res.status(200).json({ message: "Booking canceled" });
+            res.status(200).json({ message: "Booking deleted successfully" });
         } else {
             res.status(404).json({ message: "Booking not found" });
         }
