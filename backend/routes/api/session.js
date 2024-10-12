@@ -1,76 +1,106 @@
-const express = require('express');
-const { Op } = require('sequelize');
-const bcrypt = require('bcryptjs');
+const express = require("express");
+const { Op } = require("sequelize");
+const bcrypt = require("bcryptjs");
 
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
-const { User } = require('../../db/models');
+const { setTokenCookie, restoreUser } = require("../../utils/auth");
+const { User } = require("../../db/models");
 
 const router = express.Router();
 
-// Log in
-router.post(
-    '/',
-    async (req, res, next) => {
-      const { credential, password } = req.body;
-  
-      const user = await User.unscoped().findOne({
-        where: {
-          [Op.or]: {
-            username: credential,
-            email: credential
-          }
+// Login
+router.post("/", async (req, res, next) => {
+    try {
+        const { credential, password } = req.body;
+
+        const user = await User.unscoped().findOne({
+            where: {
+                [Op.or]: {
+                    username: credential,
+                    email: credential,
+                },
+            },
+        });
+
+        if (
+            !user ||
+            !bcrypt.compareSync(password, user.hashedPassword.toString())
+        ) {
+            const err = new Error("Login failed");
+            err.status = 401;
+            err.title = "Login failed";
+            err.errors = {
+                credential: "The provided credentials were invalid.",
+            };
+            return next(err);
         }
-      });
-  
-      if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-        const err = new Error('Login failed');
-        err.status = 401;
-        err.title = 'Login failed';
-        err.errors = { credential: 'The provided credentials were invalid.' };
-        return next(err);
-      }
-  
-      const safeUser = {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-      };
-  
-      await setTokenCookie(res, safeUser);
-  
-      return res.json({
-        user: safeUser
-      });
-    }
-  );
 
-  // Log out 
-  router.delete(
-    '/',
-    (_req, res) => {
-      res.clearCookie('token');
-      return res.json({ message: 'success' });
-    }
-  );
-
-  // Restore session user
-router.get(
-    '/',
-    (req, res) => {
-      const { user } = req;
-      if (user) {
         const safeUser = {
-          id: user.id,
-          email: user.email,
-          username: user.username,
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username,
+        };
+
+        await setTokenCookie(res, safeUser);
+
+        return res.json({
+            user: safeUser,
+        });
+    } catch (error) {
+        return res.status(400).json({ message: "Login failed", errors: error });
+    }
+});
+
+// Logout
+router.delete("/", (_req, res) => {
+    res.clearCookie("token");
+    return res.json({ message: "Successfully logged out" });
+});
+
+// Restore session user
+router.get("/", (req, res) => {
+    const { user } = req;
+    if (user) {
+        const safeUser = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username,
         };
         return res.json({
-          user: safeUser
+            user: safeUser,
         });
-      } else return res.json({ user: null });
-    }
-  );
-  
-  
+    } else return res.json({ user: null });
+});
 
-  module.exports = router;
+// Get current user
+router.get("/", async (req, res) => {
+    try {
+        const user = req.user;
+
+        if (!user) {
+            return res.json({ user: null });
+        }
+
+        const safeUser = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username,
+        };
+
+        return res.json({
+            user: safeUser,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to retrieve session",
+            error: error.message,
+        });
+    }
+});
+
+module.exports = router;
