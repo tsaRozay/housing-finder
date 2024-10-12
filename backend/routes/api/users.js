@@ -1,8 +1,9 @@
 const express = require("express");
-const bcrypt = require('bcryptjs')
-const { setTokenCookie, requireAuth } = require('../../utils/auth');
+const bcrypt = require("bcryptjs");
+const { setTokenCookie, requireAuth } = require("../../utils/auth");
 const router = express.Router();
 const { User } = require("../../db/models");
+const { json } = require("sequelize");
 
 // Get all users
 router.get("/", async (req, res) => {
@@ -30,26 +31,38 @@ router.get("/current", async (req, res) => {
 });
 
 // Sign up
-router.post(
-    '/',
-    async (req, res) => {
-      const { email, password, username } = req.body;
-      const hashedPassword = bcrypt.hashSync(password);
-      const user = await User.create({ email, username, hashedPassword });
-  
-      const safeUser = {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-      };
-  
-      await setTokenCookie(res, safeUser);
-  
-      return res.json({
-        user: safeUser
-      });
+router.post("/", async (req, res) => {
+    try {
+        const { firstName, lastName, email, password, username } = req.body;
+        const hashedPassword = bcrypt.hashSync(password);
+        const user = await User.create({
+            firstName,
+            lastName,
+            email,
+            username,
+            hashedPassword,
+        });
+
+        const safeUser = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username,
+        };
+
+        await setTokenCookie(res, safeUser);
+
+        return res.json({
+            user: safeUser,
+        });
+    } catch (error) {
+        return (
+            res.status(400) /
+            json({ message: "User creation failed", errors: error })
+        );
     }
-  );
+});
 
 // Get a specific user by ID
 router.get("/:id", async (req, res) => {
