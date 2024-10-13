@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get current user
-router.get("/current", async (req, res) => {
+router.get("/current", requireAuth, async (req, res) => {
     try {
         const userId = req.user.id;
         const user = await User.findByPk(userId);

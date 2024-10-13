@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const { Spot, Review } = require("../../db/models");
+const { requireAuth } = require("../../utils/auth");
 
 // Get all reviews of the current user
-router.get("/current", async (req, res) => {
+router.get("/current", requireAuth, async (req, res) => {
     try {
         const userId = req.user.id;
         const reviews = await Review.findAll({ where: { userId } });
@@ -26,7 +27,7 @@ router.get("/spots/:spotId/reviews", async (req, res) => {
 });
 
 // Create a review for a spot
-router.post("/spots/:spotId/reviews", async (req, res) => {
+router.post("/spots/:spotId/reviews", requireAuth, async (req, res) => {
     try {
         const { content, rating, userId } = req.body;
         const spot = await Spot.findByPk(req.params.spotId);
@@ -47,7 +48,7 @@ router.post("/spots/:spotId/reviews", async (req, res) => {
 });
 
 // Edit a review
-router.patch("/reviews/:id", async (req, res) => {
+router.patch("/reviews/:id", requireAuth, async (req, res) => {
     try {
         const { content, rating } = req.body;
         const review = await Review.findByPk(req.params.id);
@@ -63,7 +64,7 @@ router.patch("/reviews/:id", async (req, res) => {
 });
 
 // Add an image to a review
-router.post("/reviews/:reviewId/images", async (req, res) => {
+router.post("/reviews/:reviewId/images", requireAuth, async (req, res) => {
     try {
         const { imageUrl } = req.body;
         const review = await Review.findByPk(req.params.reviewId);
@@ -82,10 +83,13 @@ router.post("/reviews/:reviewId/images", async (req, res) => {
 });
 
 // Delete a review
-router.delete("/reviews/:id", async (req, res) => {
+router.delete("/reviews/:id", requireAuth, async (req, res) => {
     try {
         const review = await Review.findByPk(req.params.id);
         if (review) {
+            if (review.userId !== req.user.id) {
+                return res.status(403).json({ message: "Unauthorized" });
+            }
             await review.destroy();
             res.status(204).json({ message: "Review deleted successfully" });
         } else {

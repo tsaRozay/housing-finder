@@ -59,7 +59,7 @@ router.delete("/", (_req, res) => {
 });
 
 // Restore session user
-router.get("/", (req, res) => {
+router.get("/", restoreUser, (req, res) => {
     const { user } = req;
     if (user) {
         const safeUser = {
