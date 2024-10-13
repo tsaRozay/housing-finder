@@ -57,6 +57,7 @@ const reviewsRoute = require("./routes/api/reviews");
 const spotImagesRoute = require("./routes/api/spotImages");
 const spotsRoute = require("./routes/api/spots");
 const usersRoute = require("./routes/api/users");
+const sessionRoute = require("./routes/api/session");
 
 //Using routes
 app.use("/favorites", favoritesRoute);
@@ -67,6 +68,7 @@ app.use("/reviews", reviewsRoute);
 app.use("/spotImages", spotImagesRoute);
 app.use("/spots", spotsRoute);
 app.use("/users", usersRoute);
+app.use("/session", sessionRoute);
 
 // Catch unhandled requests and forward to error handler.
 app.use((_req, _res, next) => {
