@@ -58,10 +58,9 @@ router.post("/", async (req, res) => {
             user: safeUser,
         });
     } catch (error) {
-        return (
-            res.status(400) /
-            json({ message: "User creation failed", errors: error })
-        );
+        return res
+            .status(400)
+            .json({ message: "User creation failed", errors: error });
     }
 });
 
