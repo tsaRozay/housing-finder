@@ -60,15 +60,15 @@ const usersRoute = require("./routes/api/users");
 const sessionRoute = require("./routes/api/session");
 
 //Using routes
-app.use("/favorites", favoritesRoute);
-app.use("/countries", countriesRoutes);
-app.use("/amenities", amenitiesRoutes);
-app.use("/bookings", bookingsRoute);
-app.use("/reviews", reviewsRoute);
-app.use("/spotImages", spotImagesRoute);
-app.use("/spots", spotsRoute);
-app.use("/users", usersRoute);
-app.use("/session", sessionRoute);
+app.use("/api/favorites", favoritesRoute);
+app.use("/api/countries", countriesRoutes);
+app.use("/api/amenities", amenitiesRoutes);
+app.use("/api/bookings", bookingsRoute);
+app.use("/api/reviews", reviewsRoute);
+app.use("/api/spotImages", spotImagesRoute);
+app.use("/api/spots", spotsRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/session", sessionRoute);
 
 // Catch unhandled requests and forward to error handler.
 app.use((_req, _res, next) => {

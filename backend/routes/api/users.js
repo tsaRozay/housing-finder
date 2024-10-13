@@ -8,10 +8,11 @@ const { json } = require("sequelize");
 // Get all users
 router.get("/", async (req, res) => {
     try {
-        const users = await UserActivation.findAll();
+        const users = await User.findAll();
         res.json(users);
     } catch (error) {
         res.status(500).json({ message: "Error retrieving users" });
+        console.error(error);
     }
 });
 
