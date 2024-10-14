@@ -5,10 +5,26 @@ const bcrypt = require("bcryptjs");
 const { setTokenCookie, restoreUser } = require("../../utils/auth");
 const { User } = require("../../db/models");
 
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
+
 const router = express.Router();
 
-// Login
-router.post("/", async (req, res, next) => {
+
+// Validation for login
+const validateLogin = [
+  check('credential')
+    .exists({ checkFalsy: true })
+    .notEmpty()
+    .withMessage('Please provide a valid email or username.'),
+  check('password')
+    .exists({ checkFalsy: true })
+    .withMessage('Please provide a password.'),
+  handleValidationErrors
+];
+
+// Login with validation
+router.post("/", validateLogin, async (req, res, next) => {
     try {
         const { credential, password } = req.body;
 
@@ -57,6 +73,7 @@ router.delete("/", (_req, res) => {
     res.clearCookie("token");
     return res.json({ message: "Successfully logged out" });
 });
+
 
 // Restore session user
 router.get("/", restoreUser, (req, res) => {
