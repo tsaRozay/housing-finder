@@ -1,10 +1,11 @@
 markdown
+
 # [housing finder]
 
 ## Database Schema Design
 
 ![db-schema]
 
-[db-schema]: ./images/example.png
+[db-schema]: ./images/db-schema.png
 
 ## API Documentation
