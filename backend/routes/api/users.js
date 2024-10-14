@@ -1,11 +1,14 @@
 const express = require("express");
-const bcrypt = require('bcryptjs')
-const { setTokenCookie, requireAuth } = require('../../utils/auth');
+const bcrypt = require("bcryptjs");
+const { setTokenCookie, requireAuth } = require("../../utils/auth");
 const router = express.Router();
 const { User } = require("../../db/models");
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
+const { json } = require("sequelize");
+
+// Validation middleware for signup
 const validateSignup = [
     check('email')
       .exists({ checkFalsy: true })
@@ -31,12 +34,15 @@ router.post(
     '/',
     validateSignup,
     async (req, res) => {
-      const { email, password, username } = req.body;
+      try {
+      const { firstName, lastName, email, password, username } = req.body;
       const hashedPassword = bcrypt.hashSync(password);
-      const user = await User.create({ email, username, hashedPassword });
+      const user = await User.create({ firstName, lastName, email, username, hashedPassword });
   
       const safeUser = {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
       };
@@ -45,25 +51,29 @@ router.post(
   
       return res.json({
         user: safeUser
-      });
+      });      
+      } catch (error) {
+      console.error(error);
+       return res.status(400).json({ message: "User creation failed"
+, errors: error.errors || error.message });
+      }
     }
   );
-
-
 
 
 // Get all users
 router.get("/", async (req, res) => {
     try {
-        const users = await UserActivation.findAll();
+        const users = await User.findAll();
         res.json(users);
     } catch (error) {
         res.status(500).json({ message: "Error retrieving users" });
+        console.error(error);
     }
 });
 
 // Get current user
-router.get("/current", async (req, res) => {
+router.get("/current", requireAuth, async (req, res) => {
     try {
         const userId = req.user.id;
         const user = await User.findByPk(userId);
@@ -76,6 +86,7 @@ router.get("/current", async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
 
 // Get a specific user by ID
 router.get("/:id", async (req, res) => {

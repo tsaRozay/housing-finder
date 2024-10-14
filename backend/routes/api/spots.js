@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Spot, SpotImage, Amenity, Review } = require("../../db/models");
+const { requireAuth } = require("../../utils/auth");
 
 // Get all spots
 router.get("/", async (req, res) => {
@@ -15,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get all spots owned by the current user
-router.get("/current", async (req, res) => {
+router.get("/current", requireAuth, async (req, res) => {
     try {
         const userId = req.user.id;
         const spots = await Spot.findAll({ where: { ownerId: userId } });
@@ -26,7 +27,7 @@ router.get("/current", async (req, res) => {
 });
 
 // Create a new spot, might need to change userId to ownerId later
-router.post("/", async (req, res) => {
+router.post("/", requireAuth, async (req, res) => {
     try {
         const { name, description, price, countryId, userId } = req.body;
         const newSpot = await Spot.create({
@@ -59,7 +60,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Edit spot details
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", requireAuth, async (req, res) => {
     try {
         const { name, description, price } = req.body;
         const spot = await Spot.findByPk(req.params.id);
@@ -75,7 +76,7 @@ router.patch("/:id", async (req, res) => {
 });
 
 // Add an image to a spot
-router.post("/:spotId/images", async (req, res) => {
+router.post("/:spotId/images", requireAuth, async (req, res) => {
     try {
         const { imageUrl } = req.body;
         const spot = await Spot.findByPk(req.params.spotId);
@@ -94,7 +95,7 @@ router.post("/:spotId/images", async (req, res) => {
 });
 
 // Delete a spot
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", requireAuth, async (req, res) => {
     try {
         const spot = await Spot.findByPk(req.params.id);
         if (spot) {
