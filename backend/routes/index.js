@@ -19,5 +19,9 @@ router.get("/hello/world", function (req, res) {
     res.send("Hello World!");
 });
 
+router.get("/message", function(req, res){
+  res.send("It's working")
+})
+
 
 module.exports = router;
