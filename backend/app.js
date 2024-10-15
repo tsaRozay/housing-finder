@@ -47,6 +47,12 @@ app.use(
     })
 );
 
+// Root Route 
+
+app.get('/', (req, res) => {
+    res.send('Welcome to the Housing Finder API!');
+});
+
 // Connect all the routes
 app.use(routes);
 
