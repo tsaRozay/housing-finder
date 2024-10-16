@@ -6,12 +6,18 @@
   "scripts": {
     "install": "npm --prefix backend install backend",
     "dev:backend": "npm install --prefix backend start",
-    "sequelize": "npm run --prefix backend sequelize",
+    "sequelize": "sequelize --config config/database.js",
     "sequelize-cli": "npm run --prefix backend sequelize-cli",
     "start": "npm start --prefix backend",
     "build": "npm run --prefix backend build"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "sequelize": "^6.37.4"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.2"
+  }
 }
