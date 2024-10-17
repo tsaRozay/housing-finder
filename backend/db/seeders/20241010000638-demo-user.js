@@ -5,8 +5,6 @@ const bcrypt = require("bcryptjs");
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    console.log('Seeding Users...');
-
     let options = {};
     if (process.env.NODE_ENV === 'production' && process.env.SCHEMA) {
       options.schema = process.env.SCHEMA;
@@ -21,6 +19,8 @@ module.exports = {
           hashedPassword: bcrypt.hashSync('password', 10),
           firstName: 'Demo',
           lastName: 'User',
+          profilePic: 'https://example.com/demo-pic.jpg', // Add a placeholder profile pic
+          isHost: false,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -30,6 +30,8 @@ module.exports = {
           hashedPassword: bcrypt.hashSync('password2', 10),
           firstName: 'Fake',
           lastName: 'User1',
+          profilePic: 'https://example.com/fakeuser1-pic.jpg',
+          isHost: true,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -39,6 +41,8 @@ module.exports = {
           hashedPassword: bcrypt.hashSync('password3', 10),
           firstName: 'Fake',
           lastName: 'User2',
+          profilePic: 'https://example.com/fakeuser2-pic.jpg',
+          isHost: false,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -48,6 +52,8 @@ module.exports = {
           hashedPassword: bcrypt.hashSync('kakarot', 10),
           firstName: 'Son',
           lastName: 'Goku',
+          profilePic: 'https://example.com/goku-pic.jpg',
+          isHost: true,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -57,20 +63,19 @@ module.exports = {
           hashedPassword: bcrypt.hashSync('prince', 10),
           firstName: 'Vegeta',
           lastName: 'Saiyan',
+          profilePic: 'https://example.com/vegeta-pic.jpg',
+          isHost: true,
           createdAt: new Date(),
           updatedAt: new Date(),
         }
       ], { validate: true, ...options });
 
-      console.log('Users successfully seeded');
     } catch (error) {
       console.error('Error seeding users:', error.message);
     }
   },
 
   async down(queryInterface, Sequelize) {
-    console.log('Removing seeded Users...');
-
     let options = {};
     if (process.env.NODE_ENV === 'production' && process.env.SCHEMA) {
       options.schema = process.env.SCHEMA;
