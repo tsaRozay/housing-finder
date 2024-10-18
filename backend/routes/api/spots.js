@@ -111,18 +111,19 @@ router.delete("/images/:imageId", requireAuth, async (req, res) => {
 });
 
 // Delete a spot
-router.delete("/:id", requireAuth, async (req, res) => {
+router.delete("/spots/:spotId", requireAuth, async (req, res) => {
     try {
-        const spot = await Spot.findByPk(req.params.id);
+        const spot = await Spot.findByPk(req.params.spotId);
         if (spot) {
             await spot.destroy();
             res.status(200).json({ message: "Spot deleted successfully" });
         } else {
-            res.status(404).json({ message: "Spot not found" });
+            res.status(404).json({ message: "Couldn't find a Spot with the specified id" });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
 
 module.exports = router;
