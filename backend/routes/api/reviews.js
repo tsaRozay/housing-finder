@@ -8,7 +8,7 @@ router.get("/current", requireAuth, async (req, res) => {
     try {
         const userId = req.user.id;
         const reviews = await Review.findAll({ where: { userId } });
-        res.json(reviews);
+        res.status(200).json(reviews);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

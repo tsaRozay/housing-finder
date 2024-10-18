@@ -116,7 +116,7 @@ router.delete("/:id", requireAuth, async (req, res) => {
         const spot = await Spot.findByPk(req.params.id);
         if (spot) {
             await spot.destroy();
-            res.status(204).json({ message: "Spot deleted successfully" });
+            res.status(200).json({ message: "Spot deleted successfully" });
         } else {
             res.status(404).json({ message: "Spot not found" });
         }
