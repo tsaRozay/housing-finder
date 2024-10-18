@@ -94,6 +94,22 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
     }
 });
 
+// Delete a spot image
+router.delete("/images/:imageId", requireAuth, async (req, res) => {
+    try {
+        const spotImage = await SpotImage.findByPk(req.params.imageId);
+
+        if (spotImage) {
+            await spotImage.destroy();
+            res.status(204).json({ message: "Spot image deleted successfully" });
+        } else {
+            res.status(404).json({ message: "Spot image not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Delete a spot
 router.delete("/:id", requireAuth, async (req, res) => {
     try {

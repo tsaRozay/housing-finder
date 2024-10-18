@@ -20,32 +20,62 @@ router.get("/spots/:spotId/reviews", async (req, res) => {
         const reviews = await Review.findAll({
             where: { spotId: req.params.spotId },
         });
-        res.json(reviews);
+        res.status(200).json(reviews);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(404).json({ error: error.message });
     }
 });
 
-// Create a review for a spot
+// Create a review for a spot based on spots id
 router.post("/spots/:spotId/reviews", requireAuth, async (req, res) => {
     try {
-        const { content, rating, userId } = req.body;
+        const { content, stars, userId } = req.body; // Assuming stars is provided in request body
         const spot = await Spot.findByPk(req.params.spotId);
-        if (spot) {
-            const newReview = await Review.create({
-                content,
-                rating,
-                spotId: spot.id,
-                userId,
+
+        // Error response: Couldn't find a Spot with the specified id
+        if (!spot) {
+            return res.status(404).json({
+                message: "Spot couldn't be found",
+                statusCode: 404
             });
-            res.status(201).json(newReview);
-        } else {
-            res.status(404).json({ message: "Spot not found" });
         }
+
+        // Error response: Review from the current user already exists for the Spot
+        const existingReview = await Review.findOne({
+            where: {
+                spotId: spot.id,
+                userId
+            }
+        });
+
+        if (existingReview) {
+            return res.status(403).json({
+                message: "Review from the current user already exists for the Spot",
+                statusCode: 403
+            });
+        }
+
+        // Validate stars to be between 1 and 5
+        if (stars < 1 || stars > 5) {
+            return res.status(400).json({
+                message: "Stars must be an integer from 1 to 5",
+                statusCode: 400
+            });
+        }
+
+        const newReview = await Review.create({
+            content,
+            stars,
+            spotId: spot.id,
+            userId
+        });
+
+        res.status(201).json(newReview);
     } catch (error) {
         res.status(500).json({ message: "Error creating review" });
     }
 });
+
 
 // Edit a review
 router.patch("/reviews/:id", requireAuth, async (req, res) => {
@@ -63,7 +93,7 @@ router.patch("/reviews/:id", requireAuth, async (req, res) => {
     }
 });
 
-// Add an image to a review
+// Add an image to a review based on the reviews id 
 router.post("/reviews/:reviewId/images", requireAuth, async (req, res) => {
     try {
         const { imageUrl } = req.body;
