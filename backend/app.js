@@ -10,7 +10,7 @@ const { environment } = require("./config");
 const isProduction = environment === "production";
 const { ValidationError } = require("sequelize");
 
-require('dotenv').config();
+require("dotenv").config();
 
 const app = express();
 
@@ -47,10 +47,10 @@ app.use(
     })
 );
 
-// Root Route 
+// Root Route
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the Housing Finder API!');
+app.get("/", (req, res) => {
+    res.send("Welcome to the Housing Finder API!");
 });
 
 // Connect all the routes
@@ -66,6 +66,7 @@ const spotImagesRoute = require("./routes/api/spotImages");
 const spotsRoute = require("./routes/api/spots");
 const usersRoute = require("./routes/api/users");
 const sessionRoute = require("./routes/api/session");
+const reviewImagesRoute = require("./routes/api/reviewImages");
 
 //Using routes
 app.use("/api/favorites", favoritesRoute);
@@ -77,6 +78,7 @@ app.use("/api/spotImages", spotImagesRoute);
 app.use("/api/spots", spotsRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/session", sessionRoute);
+app.use("/api/reviewImages", reviewImagesRoute);
 
 // Catch unhandled requests and forward to error handler.
 app.use((_req, _res, next) => {

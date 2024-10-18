@@ -6,6 +6,7 @@ const amenitiesRouter = require("./amenities.js");
 const bookingsRouter = require("./bookings.js");
 const favoritesRouter = require("./favorites.js");
 const reviewsRouter = require("./reviews.js");
+const reviewImagesRouter = require("./reviewImages.js");
 const spotImagesRouter = require("./spotImages.js");
 const spotsRouter = require("./spots.js");
 const csrfRouter = require("./csrf"); // Import the csrf router
@@ -42,6 +43,8 @@ router.use("/bookings", bookingsRouter);
 router.use("/favorites", favoritesRouter);
 
 router.use("/reviews", reviewsRouter);
+
+router.use("/reviewImages", reviewImagesRouter);
 
 router.use("/spotImages", spotImagesRouter);
 
