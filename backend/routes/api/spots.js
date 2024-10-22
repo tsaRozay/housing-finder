@@ -39,7 +39,7 @@ router.post("/", requireAuth, async (req, res) => {
         });
         res.status(201).json(newSpot);
     } catch (error) {
-        res.status(500).json({ message: "Error creating spot" });
+        res.status(400).json({ message: "Error creating spot" });
     }
 });
 
@@ -50,7 +50,7 @@ router.get("/:id", async (req, res) => {
             include: [SpotImage, Amenity],
         });
         if (spot) {
-            res.json(spot);
+            res.status(200).json(spot);
         } else {
             res.status(404).json({ message: "Spot not found" });
         }
