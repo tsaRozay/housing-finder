@@ -66,16 +66,16 @@ router.patch("/:id", requireAuth, async (req, res) => {
         const spot = await Spot.findByPk(req.params.id);
         if (spot) {
             await spot.update({ name, description, price });
-            res.json(spot);
+            res.status(200).json(spot);
         } else {
             res.status(404).json({ message: "Spot not found" });
         }
     } catch (error) {
-        res.status(500).json({ message: "Error updating spot" });
+        res.status(400).json({ message: "Error updating spot" });
     }
 });
 
-// Add an image to a spot
+// Add an image to a spot by spot id
 router.post("/:spotId/images", requireAuth, async (req, res) => {
     try {
         const { imageUrl } = req.body;
@@ -87,7 +87,7 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
             });
             res.status(201).json(newImage);
         } else {
-            res.status(404).json({ message: "Spot not found" });
+            res.status(403).json({ message: "Spot not found" });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
