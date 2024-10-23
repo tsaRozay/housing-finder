@@ -29,7 +29,7 @@ router.get("/spots/:spotId/reviews", async (req, res) => {
 // Create a review for a spot based on spots id
 router.post("/spots/:spotId/reviews", requireAuth, async (req, res) => {
     try {
-        const { content, stars, userId } = req.body; // Assuming stars is provided in request body
+        const { content, stars, userId } = req.body;
         const spot = await Spot.findByPk(req.params.spotId);
 
         // Error response: Couldn't find a Spot with the specified id

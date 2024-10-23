@@ -3,17 +3,51 @@ const router = express.Router();
 const { Spot, SpotImage, Amenity, Review } = require("../../db/models");
 const { requireAuth } = require("../../utils/auth");
 
-// Get all spots
+// Get all spots with query filters and pagination
 router.get("/spots", async (req, res) => {
     try {
-        const spots = await Spot.findAll({
+        const { city, minPrice, maxPrice, page = 1, size = 10 } = req.query;
+
+        // Convert page and size to integers
+        const limit = parseInt(size, 10) || 10; // Default page size to 10
+        const offset = (parseInt(page, 10) - 1) * limit; 
+
+        // Build the filter options based on the query parameters
+        let where = {};
+
+        if (city) {
+            where.city = city;
+        }
+
+        if (minPrice || maxPrice) {
+            where.price = {};
+            if (minPrice) {
+                where.price[Sequelize.Op.gte] = minPrice;
+            }
+            if (maxPrice) {
+                where.price[Sequelize.Op.lte] = maxPrice;
+            }
+        }
+
+        // pagination and filters applied
+        const spots = await Spot.findAndCountAll({
+            where,
             include: [SpotImage, Amenity, Review],
+            limit,
+            offset,
         });
-        res.json(spots);
+
+        res.status(200).json({
+            spots: spots.rows,
+            page: parseInt(page, 10),
+            size: parseInt(size, 10),
+            totalItems: spots.count,
+        });
     } catch (error) {
         res.status(400).json({ message: "Error retrieving spots" });
     }
 });
+
 
 // Get all spots owned by the current user
 router.get("/spots/current", requireAuth, async (req, res) => {
