@@ -67,10 +67,10 @@ router.post("/spots/:spotId/reviews", requireAuth, async (req, res) => {
             content,
             stars,
             spotId: spot.id,
-            userId: req.user.id, // Use userId from req.user
+            userId: req.user.id,
         });
 
-        res.status(201).json(newReview); // 201 for successful creation
+        res.status(201).json(newReview);
     } catch (error) {
         res.status(500).json({ message: "Error creating review", error: error.message });
     }
@@ -79,8 +79,8 @@ router.post("/spots/:spotId/reviews", requireAuth, async (req, res) => {
 // Edit a review
 router.put("/reviews/:reviewId", requireAuth, async (req, res) => {
     try {
-        const { content, stars } = req.body; // Change rating to stars for consistency
-        const review = await Review.findByPk(req.params.reviewId); // Corrected from req.params.id to req.params.reviewId
+        const { content, stars } = req.body;
+        const review = await Review.findByPk(req.params.reviewId);
 
         if (!review) {
             return res.status(404).json({ message: "Review not found" });
@@ -91,8 +91,8 @@ router.put("/reviews/:reviewId", requireAuth, async (req, res) => {
             return res.status(403).json({ message: "Unauthorized" });
         }
 
-        await review.update({ content, stars }); // Update the review
-        res.status(200).json(review); // Return the updated review
+        await review.update({ content, stars })
+        res.status(200).json(review);
     } catch (error) {
         res.status(500).json({ message: "Error editing review", error: error.message });
     }
@@ -112,7 +112,7 @@ router.post("/reviews/:reviewId/images", requireAuth, async (req, res) => {
             reviewId: review.id,
             imageUrl,
         });
-        res.status(201).json(newImage); // 201 for successful creation
+        res.status(201).json(newImage);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -133,7 +133,7 @@ router.delete("/reviews/:reviewId", requireAuth, async (req, res) => {
         }
 
         await review.destroy();
-        res.status(204).json({ message: "Review deleted successfully" }); // 204 for successful deletion, no content
+        res.status(200).json({ message: "Review deleted successfully" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
