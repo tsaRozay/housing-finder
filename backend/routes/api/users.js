@@ -30,35 +30,56 @@ const validateSignup = [
   ];
 
 // Sign up
-router.post(
-    '/',
-    validateSignup,
-    async (req, res) => {
-      try {
-      const { firstName, lastName, email, password, username } = req.body;
-      const hashedPassword = bcrypt.hashSync(password);
-      const user = await User.create({ firstName, lastName, email, username, hashedPassword });
-  
-      const safeUser = {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        username: user.username,
-      };
-  
-      await setTokenCookie(res, safeUser);
-  
-      return res.json({
-        user: safeUser
-      });      
-      } catch (error) {
-      console.error(error);
-       return res.status(400).json({ message: "User creation failed"
-, errors: error.errors || error.message });
-      }
+router.post('/', validateSignup, async (req, res) => {
+    try {
+        const { firstName, lastName, email, password, username } = req.body;
+
+        // Check if a user already exists with the email or username
+        const existingUser = await User.findOne({
+            where: {
+                [Op.or]: [{ email }, { username }]
+            }
+        });
+
+        if (existingUser) {
+            return res.status(500).json({ message: "User already exists with the specified email or username" });
+        }
+
+        // Create new user
+        const hashedPassword = bcrypt.hashSync(password);
+        const user = await User.create({
+            firstName,
+            lastName,
+            email,
+            username,
+            hashedPassword
+        });
+
+        const safeUser = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username,
+        };
+
+        await setTokenCookie(res, safeUser);
+
+        return res.status(201).json({ user: safeUser });
+        
+    } catch (error) {
+        // Body validation errors
+        if (error.name === 'SequelizeValidationError') {
+            return res.status(400).json({
+                message: "Validation errors",
+                errors: error.errors.map(err => err.message)
+            });
+        }
+
+        console.error(error);
+        return res.status(500).json({ message: "User creation failed", error: error.message });
     }
-  );
+});
 
 
 // Get all users
