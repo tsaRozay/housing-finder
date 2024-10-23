@@ -60,7 +60,7 @@ router.get("/reviews/:reviewId/images", async (req, res) => {
 });
 
 // Delete an image from a review
-router.delete("/reviews/:id", requireAuth, async (req, res) => {
+router.delete("/review-images/:imageId", requireAuth, async (req, res) => {
     try {
         const reviewImage = await ReviewImage.findByPk(req.params.imageId);
 

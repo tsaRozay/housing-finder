@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get all current user's bookings
-router.get("/current", async (req, res) => {
+router.get("/bookings/current", async (req, res) => {
     try {
         const userId = req.user.id;
         const bookings = await Booking.findAll({ where: { userId } });
@@ -64,7 +64,7 @@ router.post("/spots/:spotId/bookings", async (req, res) => {
 });
 
 // Edit a booking
-router.patch("/bookings/:id", async (req, res) => {
+router.patch("/bookings/:bookingId", async (req, res) => {
     try {
         const booking = await Booking.findByPk(req.params.id);
 
@@ -84,7 +84,7 @@ router.patch("/bookings/:id", async (req, res) => {
 });
 
 // Delete a booking
-router.delete("/bookings/:id", async (req, res) => {
+router.delete("/bookings/:bookingId", async (req, res) => {
     try {
         const booking = await Booking.findByPk(req.params.id);
 

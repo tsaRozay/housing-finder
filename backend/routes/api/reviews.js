@@ -4,7 +4,7 @@ const { Spot, Review } = require("../../db/models");
 const { requireAuth } = require("../../utils/auth");
 
 // Get all reviews of the current user
-router.get("/current", requireAuth, async (req, res) => {
+router.get("/reviews/current", requireAuth, async (req, res) => {
     try {
         const userId = req.user.id;
         const reviews = await Review.findAll({ where: { userId } });
@@ -36,7 +36,7 @@ router.post("/spots/:spotId/reviews", requireAuth, async (req, res) => {
         if (!spot) {
             return res.status(404).json({
                 message: "Spot couldn't be found",
-                statusCode: 404
+                statusCode: 404,
             });
         }
 
@@ -44,14 +44,15 @@ router.post("/spots/:spotId/reviews", requireAuth, async (req, res) => {
         const existingReview = await Review.findOne({
             where: {
                 spotId: spot.id,
-                userId
-            }
+                userId,
+            },
         });
 
         if (existingReview) {
             return res.status(403).json({
-                message: "Review from the current user already exists for the Spot",
-                statusCode: 403
+                message:
+                    "Review from the current user already exists for the Spot",
+                statusCode: 403,
             });
         }
 
@@ -59,7 +60,7 @@ router.post("/spots/:spotId/reviews", requireAuth, async (req, res) => {
         if (stars < 1 || stars > 5) {
             return res.status(400).json({
                 message: "Stars must be an integer from 1 to 5",
-                statusCode: 400
+                statusCode: 400,
             });
         }
 
@@ -67,7 +68,7 @@ router.post("/spots/:spotId/reviews", requireAuth, async (req, res) => {
             content,
             stars,
             spotId: spot.id,
-            userId
+            userId,
         });
 
         res.status(201).json(newReview);
@@ -76,9 +77,8 @@ router.post("/spots/:spotId/reviews", requireAuth, async (req, res) => {
     }
 });
 
-
 // Edit a review
-router.patch("/reviews/:id", requireAuth, async (req, res) => {
+router.put("/reviews/:reviewId", requireAuth, async (req, res) => {
     try {
         const { content, rating } = req.body;
         const review = await Review.findByPk(req.params.id);
@@ -93,7 +93,7 @@ router.patch("/reviews/:id", requireAuth, async (req, res) => {
     }
 });
 
-// Add an image to a review based on the reviews id 
+// Add an image to a review based on the reviews id
 router.post("/reviews/:reviewId/images", requireAuth, async (req, res) => {
     try {
         const { imageUrl } = req.body;
@@ -113,7 +113,7 @@ router.post("/reviews/:reviewId/images", requireAuth, async (req, res) => {
 });
 
 // Delete a review
-router.delete("/reviews/:id", requireAuth, async (req, res) => {
+router.delete("/reviews/:reviewId", requireAuth, async (req, res) => {
     try {
         const review = await Review.findByPk(req.params.id);
         if (review) {

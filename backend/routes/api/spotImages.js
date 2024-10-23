@@ -22,7 +22,7 @@ router.post("/:spotId/images", async (req, res) => {
 });
 
 // Delete an image from a spot
-router.delete("/:spotId/images/:imageId", async (req, res) => {
+router.delete("/spot-images/:imageId", async (req, res) => {
     try {
         const image = await SpotImage.findByPk(req.params.imageId);
         if (image) {
