@@ -54,7 +54,7 @@ router.get("/spots/current", requireAuth, async (req, res) => {
     try {
         const userId = req.user.id;
         const spots = await Spot.findAll({ where: { ownerId: userId } });
-        res.statusjson(spots);
+        res.status(200).json(spots);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

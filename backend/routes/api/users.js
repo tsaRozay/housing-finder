@@ -8,6 +8,64 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const { json } = require("sequelize");
 
+// Validation middleware for login
+const validateLogin = [
+    check('credential')
+      .exists({ checkFalsy: true })
+      .withMessage('Email or username is required'),
+    check('password')
+      .exists({ checkFalsy: true })
+      .withMessage('Password is required'),
+    handleValidationErrors
+  ];
+
+  // Login Route
+router.post('/login', validateLogin, async (req, res) => {
+    const { credential, password } = req.body;
+  
+    try {
+      // Check if the necessary fields exist
+      if (!credential || !password) {
+        return res.status(400).json({
+          message: 'Bad Request',
+          errors: {
+            credential: 'Email or username is required',
+            password: 'Password is required'
+          }
+        });
+      }
+  
+      // Find user by email or username
+      const user = await User.findOne({
+        where: {
+          [Op.or]: [{ email: credential }, { username: credential }]
+        }
+      });
+  
+      // user is not found or password don't match
+      if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+  
+      // return user info and set cookie
+      const safeUser = {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        username: user.username,
+      };
+  
+      await setTokenCookie(res, safeUser);
+  
+      return res.status(200).json({ user: safeUser });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  });
+
 // Validation middleware for signup
 const validateSignup = [
     check('email')
@@ -96,17 +154,31 @@ router.get("/", async (req, res) => {
 // Get current user
 router.get("/current", requireAuth, async (req, res) => {
     try {
-        const userId = req.user.id;
-        const user = await User.findByPk(userId);
-        if (user) {
-            res.json(user);
-        } else {
-            res.status(404).json({ message: "User not found" });
+        // Check if there's a user logged in
+        if (req.user) {
+            const userId = req.user.id;
+            const user = await User.findByPk(userId);
+
+            if (user) {
+                // Successful response 
+                return res.status(200).json({
+                    user: {
+                        id: user.id,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        email: user.email,
+                        username: user.username,
+                    },
+                });
+            }
         }
+        // No User logged in
+        res.status(200).json({ user: null });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
 
 
 // Get a specific user by ID
