@@ -5,23 +5,50 @@ const bcrypt = require("bcryptjs");
 const { setTokenCookie, restoreUser } = require("../../utils/auth");
 const { User } = require("../../db/models");
 
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
+const { check } = require("express-validator");
+const { handleValidationErrors } = require("../../utils/validation");
 
 const router = express.Router();
 
-
 // Validation for login
 const validateLogin = [
-  check('credential')
-    .exists({ checkFalsy: true })
-    .notEmpty()
-    .withMessage('Please provide a valid email or username.'),
-  check('password')
-    .exists({ checkFalsy: true })
-    .withMessage('Please provide a password.'),
-  handleValidationErrors
+    check("credential")
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage("Please provide a valid email or username."),
+    check("password")
+        .exists({ checkFalsy: true })
+        .withMessage("Please provide a password."),
+    handleValidationErrors,
 ];
+
+// Get current user
+router.get("/", async (req, res) => {
+    try {
+        const user = req.user;
+
+        if (!user) {
+            return res.json({ user: null });
+        }
+
+        const safeUser = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username,
+        };
+
+        return res.json({
+            user: safeUser,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to retrieve session",
+            error: error.message,
+        });
+    }
+});
 
 // Login with validation
 router.post("/", validateLogin, async (req, res, next) => {
@@ -64,7 +91,7 @@ router.post("/", validateLogin, async (req, res, next) => {
             user: safeUser,
         });
     } catch (error) {
-        return res.status(400).json({ message: "Login failed", errors: error });
+        return res.status(400).json({ message: "Bad request", errors: error });
     }
 });
 
@@ -73,7 +100,6 @@ router.delete("/", (_req, res) => {
     res.clearCookie("token");
     return res.json({ message: "Successfully logged out" });
 });
-
 
 // Restore session user
 router.get("/", restoreUser, (req, res) => {
@@ -90,34 +116,6 @@ router.get("/", restoreUser, (req, res) => {
             user: safeUser,
         });
     } else return res.json({ user: null });
-});
-
-// Get current user
-router.get("/", async (req, res) => {
-    try {
-        const user = req.user;
-
-        if (!user) {
-            return res.json({ user: null });
-        }
-
-        const safeUser = {
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            username: user.username,
-        };
-
-        return res.json({
-            user: safeUser,
-        });
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed to retrieve session",
-            error: error.message,
-        });
-    }
 });
 
 module.exports = router;
