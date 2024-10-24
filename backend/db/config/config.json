@@ -1,0 +1,23 @@
+{
+  "development": {
+    "storage": "./database.sqlite",
+    "dialect": "sqlite",
+    "seederStorage": "sequelize"
+  },
+  "test": {
+    "storage": "./database.test.sqlite",
+    "dialect": "sqlite",
+    "seederStorage": "sequelize"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  }
+}
