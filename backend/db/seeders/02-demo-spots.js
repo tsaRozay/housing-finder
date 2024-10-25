@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
                     updatedAt: new Date(),
                 },
                 {
-                    ownerId: 2, 
+                    ownerId: 2,
                     address: "456 Kame House Rd",
                     city: "Island near West City",
                     state: "Unknown",

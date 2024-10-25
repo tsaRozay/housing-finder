@@ -1,18 +1,18 @@
-'use strict';
+"use strict";
 
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
     class Spot extends Model {
         static associate(models) {
             // Define associations here
             Spot.hasMany(models.Review, {
-                foreignKey: 'spotId',
-                onDelete: 'CASCADE',
+                foreignKey: "spotId",
+                onDelete: "CASCADE",
             });
             Spot.belongsTo(models.User, {
-                foreignKey: 'userId',
-                onDelete: 'SET NULL',
+                foreignKey: "userId",
+                onDelete: "SET NULL",
             });
         }
     }
@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            location: {
+            address: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
@@ -38,13 +38,33 @@ module.exports = (sequelize, DataTypes) => {
                     min: 0,
                 },
             },
-            userId: {
+            ownerId: {
                 type: DataTypes.INTEGER,
                 allowNull: true,
                 references: {
-                    model: 'Users', // Reference to User model
-                    key: 'id',
+                    model: "Users", // Reference to User model
+                    key: "id",
                 },
+            },
+            city: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            state: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            country: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            lat: {
+                type: DataTypes.DECIMAL(10, 8),
+                allowNull: false,
+            },
+            lng: {
+                type: DataTypes.DECIMAL(10, 8),
+                allowNull: false,
             },
             createdAt: {
                 type: DataTypes.DATE,
@@ -59,7 +79,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         {
             sequelize,
-            modelName: 'Spot',
+            modelName: "Spot",
         }
     );
 
