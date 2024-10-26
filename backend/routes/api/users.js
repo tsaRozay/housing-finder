@@ -117,7 +117,7 @@ router.post("/", validateSignup, async (req, res) => {
             username,
             hashedPassword,
         });
-
+        console.log(user);
         const safeUser = {
             id: user.id,
             firstName: user.firstName,
@@ -141,7 +141,7 @@ router.post("/", validateSignup, async (req, res) => {
         console.error(error);
         return res
             .status(500)
-            .json({ message: "User creation failed", error: error.message });
+            .json({ message: "User creation failed", errors: error.message });
     }
 });
 
