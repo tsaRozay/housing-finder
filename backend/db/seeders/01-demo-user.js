@@ -17,6 +17,7 @@ module.exports = {
                 options,
                 [
                     {
+                        id : 1;
                         email: "demo@user.io",
                         username: "Demo-lition",
                         hashedPassword: bcrypt.hashSync("password", 10),
@@ -27,6 +28,7 @@ module.exports = {
                         updatedAt: new Date(),
                     },
                     {
+                        id : 2;
                         email: "user1@user.io",
                         username: "FakeUser1",
                         hashedPassword: bcrypt.hashSync("password2", 10),
@@ -37,6 +39,7 @@ module.exports = {
                         updatedAt: new Date(),
                     },
                     {
+                        id: 3
                         email: "user2@user.io",
                         username: "FakeUser2",
                         hashedPassword: bcrypt.hashSync("password3", 10),
@@ -47,6 +50,7 @@ module.exports = {
                         updatedAt: new Date(),
                     },
                     {
+                        id : 4;
                         email: "goku@dbz.io",
                         username: "Goku",
                         hashedPassword: bcrypt.hashSync("kakarot", 10),
@@ -57,6 +61,7 @@ module.exports = {
                         updatedAt: new Date(),
                     },
                     {
+                        id : 5;
                         email: "vegeta@dbz.io",
                         username: "Vegeta",
                         hashedPassword: bcrypt.hashSync("prince", 10),
