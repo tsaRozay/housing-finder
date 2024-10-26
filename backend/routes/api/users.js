@@ -50,6 +50,7 @@ router.post("/login", validateLogin, async (req, res) => {
     }
 });
 
+
 // Validation middleware for signup
 const validateSignup = [
     check("email")
