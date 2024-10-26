@@ -6,31 +6,31 @@ module.exports = {
         const reviewImages = [
             {
                 reviewId: 1,
-                imageUrl: "https://example.com/demo-pic.jpg",
+                url: "https://example.com/demo-pic.jpg",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
             {
                 reviewId: 2,
-                imageUrl: "https://example.com/demo-pic.jpg",
+                url: "https://example.com/demo-pic.jpg",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
             {
                 reviewId: 3,
-                imageUrl: "https://example.com/demo-pic.jpg",
+                url: "https://example.com/demo-pic.jpg",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
             {
                 reviewId: 4,
-                imageUrl: "https://example.com/demo-pic.jpg",
+                url: "https://example.com/demo-pic.jpg",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
             {
                 reviewId: 5,
-                imageUrl: "https://example.com/demo-pic.jpg",
+                url: "https://example.com/demo-pic.jpg",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
