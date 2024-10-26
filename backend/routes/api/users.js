@@ -1,11 +1,12 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
-const router = express.Router();
 const { User } = require("../../db/models");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
+
+const router = express.Router();
 
 // Validation middleware for login
 const validateLogin = [
@@ -23,19 +24,16 @@ router.post("/login", validateLogin, async (req, res) => {
     const { credential, password } = req.body;
 
     try {
-        // Find user by email or username
         const user = await User.findOne({
             where: {
                 [Op.or]: [{ email: credential }, { username: credential }],
             },
         });
 
-        // User not found or password doesn't match
         if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        // Return user info and set cookie
         const safeUser = {
             id: user.id,
             firstName: user.firstName,
@@ -72,12 +70,11 @@ const validateSignup = [
     handleValidationErrors,
 ];
 
-// Sign up
+// Sign up Route
 router.post("/", validateSignup, async (req, res) => {
     try {
         const { firstName, lastName, email, password, username } = req.body;
 
-        // Check if a user already exists with the email or username
         const existingUser = await User.findOne({
             where: {
                 [Op.or]: [{ email }, { username }],
@@ -85,12 +82,11 @@ router.post("/", validateSignup, async (req, res) => {
         });
 
         if (existingUser) {
-            return res.status(500).json({
+            return res.status(409).json({
                 message: "User already exists with the specified email or username",
             });
         }
 
-        // Create new user
         const hashedPassword = bcrypt.hashSync(password);
         const user = await User.create({
             firstName,
@@ -111,7 +107,6 @@ router.post("/", validateSignup, async (req, res) => {
         await setTokenCookie(res, safeUser);
         return res.status(201).json({ user: safeUser });
     } catch (error) {
-        // Body validation errors
         if (error.name === "SequelizeValidationError") {
             return res.status(400).json({
                 message: "Validation errors",
@@ -120,13 +115,11 @@ router.post("/", validateSignup, async (req, res) => {
         }
 
         console.error(error);
-        return res
-            .status(500)
-            .json({ message: "User creation failed", errors: error.message });
+        return res.status(500).json({ message: "User creation failed", errors: error.message });
     }
 });
 
-// Get all users
+// Get all users Route
 router.get("/", async (req, res) => {
     try {
         const users = await User.findAll();
@@ -137,7 +130,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Get current user
+// Get current user Route
 router.get("/current", requireAuth, async (req, res) => {
     try {
         if (req.user) {
@@ -162,7 +155,7 @@ router.get("/current", requireAuth, async (req, res) => {
     }
 });
 
-// Get a specific user by ID
+// Get a specific user by ID Route
 router.get("/:id", async (req, res) => {
     try {
         const user = await User.findByPk(req.params.id);
@@ -176,7 +169,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Update user profile
+// Update user profile Route
 router.patch("/:id", async (req, res) => {
     try {
         const { email, username } = req.body;
@@ -192,7 +185,7 @@ router.patch("/:id", async (req, res) => {
     }
 });
 
-// Logout user
+// Logout user Route
 router.post("/logout", (req, res) => {
     try {
         res.json({ message: "Logged out successfully" });
