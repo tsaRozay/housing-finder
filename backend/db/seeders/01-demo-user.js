@@ -14,7 +14,6 @@ module.exports = {
 
         try {
             await User.bulkCreate(
-                options,
                 [
                     {
                         email: "demo@user.io",
