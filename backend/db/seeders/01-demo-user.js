@@ -6,8 +6,8 @@ const bcrypt = require("bcryptjs");
 let options = {};
 if (process.env.NODE_ENV === "production" && process.env.SCHEMA) {
     options.schema = process.env.SCHEMA;
+    options.tableName = "Users";
 }
-options.tableName = "Users";
 
 module.exports = {
     async up(queryInterface, Sequelize) {
