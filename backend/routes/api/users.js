@@ -6,7 +6,8 @@ const { User } = require("../../db/models");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 
-const { json } = require("sequelize");
+
+const { Op } = require("sequelize");
 
 // Validation middleware for login
 const validateLogin = [
