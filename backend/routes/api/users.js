@@ -82,6 +82,7 @@ router.post("/", validateSignup, async (req, res) => {
             },
         });
 
+        // Handle case where user already exists
         if (existingUser) {
             const errors = {};
             if (existingUser.email === email) {
@@ -96,6 +97,7 @@ router.post("/", validateSignup, async (req, res) => {
             });
         }
 
+        // Hash the password and create a new user
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
@@ -106,6 +108,7 @@ router.post("/", validateSignup, async (req, res) => {
             hashedPassword,
         });
 
+        // Prepare the response for the newly created user
         const safeUser = {
             id: user.id,
             firstName: user.firstName,
@@ -114,10 +117,12 @@ router.post("/", validateSignup, async (req, res) => {
             username: user.username,
         };
 
+        // Set the cookie and return a successful response
         await setTokenCookie(res, safeUser);
 
         return res.status(201).json({ user: safeUser });
     } catch (error) {
+        // Handle Sequelize validation errors
         if (error.name === "SequelizeValidationError") {
             const errors = {};
             error.errors.forEach((err) => {
@@ -129,8 +134,12 @@ router.post("/", validateSignup, async (req, res) => {
             });
         }
 
+        // Log unexpected errors and return a generic error message
         console.error("User creation error:", error);
-        return res.status(500).json({ message: "User creation failed", errors: error.message });
+        return res.status(500).json({
+            message: "User creation failed",
+            errors: { general: error.message },
+        });
     }
 });
 
