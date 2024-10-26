@@ -3,16 +3,18 @@
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 
+let options = {};
+if (process.env.NODE_ENV === "production" && process.env.SCHEMA) {
+    options.schema = process.env.SCHEMA;
+}
+options.tableName = "Users";
+
 module.exports = {
     async up(queryInterface, Sequelize) {
-        let options = {};
-        if (process.env.NODE_ENV === "production" && process.env.SCHEMA) {
-            options.schema = process.env.SCHEMA;
-        }
-        options.tableName = "Users";
 
         try {
             await User.bulkCreate(
+                options,
                 [
                     {
                         email: "demo@user.io",
@@ -73,15 +75,10 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
-        let options = {};
-        if (process.env.NODE_ENV === "production" && process.env.SCHEMA) {
-            options.schema = process.env.SCHEMA;
-        }
-        options.tableName = "Users";
 
         const Op = Sequelize.Op;
         return queryInterface.bulkDelete(
-            options.tableName,
+            options,
             {
                 username: {
                     [Op.in]: [
