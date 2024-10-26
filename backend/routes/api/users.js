@@ -71,6 +71,7 @@ const validateSignup = [
     handleValidationErrors,
 ];
 
+// Sign up Route
 router.post("/", validateSignup, async (req, res) => {
     try {
         const { firstName, lastName, email, password, username } = req.body;
@@ -82,16 +83,8 @@ router.post("/", validateSignup, async (req, res) => {
         });
 
         if (existingUser) {
-            const errors = {};
-            if (existingUser.email === email) {
-                errors.email = "User already exists with the specified email.";
-            }
-            if (existingUser.username === username) {
-                errors.username = "User already exists with the specified username.";
-            }
-            return res.status(409).json({
-                message: "User already exists with the specified email or username.",
-                errors,
+            return res.status(500).json({
+                message: "User already exists with the specified email or username",
             });
         }
 
@@ -101,9 +94,9 @@ router.post("/", validateSignup, async (req, res) => {
             lastName,
             email,
             username,
-            password: hashedPassword,
+            hashedPassword,
         });
-
+        
         const safeUser = {
             id: user.id,
             firstName: user.firstName,
@@ -126,7 +119,6 @@ router.post("/", validateSignup, async (req, res) => {
         return res.status(500).json({ message: "User creation failed", errors: error.message });
     }
 });
-
 
 // Get all users Route
 router.get("/", async (req, res) => {
