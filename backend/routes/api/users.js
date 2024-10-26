@@ -5,8 +5,6 @@ const router = express.Router();
 const { User } = require("../../db/models");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
-
-
 const { Op } = require("sequelize");
 
 // Validation middleware for login
@@ -25,17 +23,6 @@ router.post("/login", validateLogin, async (req, res) => {
     const { credential, password } = req.body;
 
     try {
-        // Check if the necessary fields exist
-        if (!credential || !password) {
-            return res.status(400).json({
-                message: "Bad Request",
-                errors: {
-                    credential: "Email or username is required",
-                    password: "Password is required",
-                },
-            });
-        }
-
         // Find user by email or username
         const user = await User.findOne({
             where: {
@@ -43,16 +30,12 @@ router.post("/login", validateLogin, async (req, res) => {
             },
         });
 
-        // user is not found or password don't match
-        if (!user) {
+        // User not found or password doesn't match
+        if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
-        
-        if (!bcrypt.compareSync(password, user.hashedPassword.toString())) {
-            return res.status(401).json({ message: "Invalid credentials" });
-        }
-        
-        // return user info and set cookie
+
+        // Return user info and set cookie
         const safeUser = {
             id: user.id,
             firstName: user.firstName,
@@ -62,12 +45,11 @@ router.post("/login", validateLogin, async (req, res) => {
         };
 
         await setTokenCookie(res, safeUser);
-
         return res.status(200).json(safeUser);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Error logging in" });
-    }    
+    }
 });
 
 // Validation middleware for signup
@@ -79,8 +61,7 @@ const validateSignup = [
     check("username")
         .exists({ checkFalsy: true })
         .isLength({ min: 4 })
-        .withMessage("Please provide a username with at least 4 characters."),
-    check("username")
+        .withMessage("Please provide a username with at least 4 characters.")
         .not()
         .isEmail()
         .withMessage("Username cannot be an email."),
@@ -105,8 +86,7 @@ router.post("/", validateSignup, async (req, res) => {
 
         if (existingUser) {
             return res.status(500).json({
-                message:
-                    "User already exists with the specified email or username",
+                message: "User already exists with the specified email or username",
             });
         }
 
@@ -119,7 +99,7 @@ router.post("/", validateSignup, async (req, res) => {
             username,
             hashedPassword,
         });
-        console.log(user);
+        
         const safeUser = {
             id: user.id,
             firstName: user.firstName,
@@ -129,7 +109,6 @@ router.post("/", validateSignup, async (req, res) => {
         };
 
         await setTokenCookie(res, safeUser);
-
         return res.status(201).json({ user: safeUser });
     } catch (error) {
         // Body validation errors
@@ -161,13 +140,11 @@ router.get("/", async (req, res) => {
 // Get current user
 router.get("/current", requireAuth, async (req, res) => {
     try {
-        // Check if there's a user logged in
         if (req.user) {
             const userId = req.user.id;
             const user = await User.findByPk(userId);
 
             if (user) {
-                // Successful response
                 return res.status(200).json({
                     user: {
                         id: user.id,
@@ -179,7 +156,6 @@ router.get("/current", requireAuth, async (req, res) => {
                 });
             }
         }
-        // No User logged in
         res.status(200).json({ user: null });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -213,21 +189,6 @@ router.patch("/:id", async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ message: "Error updating user" });
-    }
-});
-
-// Login user
-router.post("/login", async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ where: { email } });
-        if (user && user.password === password) {
-            res.json({ message: "Login successful", user });
-        } else {
-            res.status(401).json({ message: "Invalid credentials" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error logging in" });
     }
 });
 
