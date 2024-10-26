@@ -4,7 +4,7 @@ const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 
 let options = {};
-if (process.env.NODE_ENV === "production" && process.env.SCHEMA) {
+if (process.env.NODE_ENV === "production") {
     options.schema = process.env.SCHEMA;
     options.tableName = "Users";
 }
@@ -67,7 +67,7 @@ module.exports = {
                         updatedAt: new Date(),
                     },
                 ],
-                { validate: true, ...options }
+                { validate: true }
             );
         } catch (error) {
             console.error("Error seeding users:", error.message);
