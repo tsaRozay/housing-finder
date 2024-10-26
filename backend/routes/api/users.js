@@ -76,14 +76,12 @@ router.post("/", validateSignup, async (req, res) => {
     try {
         const { firstName, lastName, email, password, username } = req.body;
 
-        // Check if user already exists
         const existingUser = await User.findOne({
             where: {
                 [Op.or]: [{ email }, { username }],
             },
         });
 
-        // If user exists, respond with specific error messages
         if (existingUser) {
             const errors = {};
             if (existingUser.email === email) {
@@ -98,10 +96,8 @@ router.post("/", validateSignup, async (req, res) => {
             });
         }
 
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10); // Use appropriate salt rounds
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create the user
         const user = await User.create({
             firstName,
             lastName,
@@ -110,7 +106,6 @@ router.post("/", validateSignup, async (req, res) => {
             hashedPassword,
         });
 
-        // Prepare the safe user object
         const safeUser = {
             id: user.id,
             firstName: user.firstName,
@@ -119,13 +114,10 @@ router.post("/", validateSignup, async (req, res) => {
             username: user.username,
         };
 
-        // Set the token cookie
         await setTokenCookie(res, safeUser);
 
-        // Send the response
         return res.status(201).json({ user: safeUser });
     } catch (error) {
-        // Handle validation errors
         if (error.name === "SequelizeValidationError") {
             const errors = {};
             error.errors.forEach((err) => {
@@ -137,7 +129,6 @@ router.post("/", validateSignup, async (req, res) => {
             });
         }
 
-        // Generic error handling
         console.error("User creation error:", error);
         return res.status(500).json({ message: "User creation failed", errors: error.message });
     }
