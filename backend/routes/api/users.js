@@ -44,13 +44,14 @@ router.post("/login", validateLogin, async (req, res) => {
         });
 
         // user is not found or password don't match
-        if (
-            !user ||
-            !bcrypt.compareSync(password, user.hashedPassword.toString())
-        ) {
+        if (!user) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
-
+        
+        if (!bcrypt.compareSync(password, user.hashedPassword.toString())) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+        
         // return user info and set cookie
         const safeUser = {
             id: user.id,
@@ -62,11 +63,11 @@ router.post("/login", validateLogin, async (req, res) => {
 
         await setTokenCookie(res, safeUser);
 
-        return res.status(200).json({ user: safeUser });
+        return res.status(200).json(safeUser);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: "Server error" });
-    }
+        return res.status(500).json({ message: "Error logging in" });
+    }    
 });
 
 // Validation middleware for signup
