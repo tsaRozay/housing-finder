@@ -83,7 +83,7 @@ router.post("/", validateSignup, async (req, res) => {
         });
 
         if (existingUser) {
-            return res.status(409).json({
+            return res.status(500).json({
                 message: "User already exists with the specified email or username",
             });
         }
