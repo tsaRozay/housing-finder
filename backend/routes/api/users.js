@@ -77,6 +77,7 @@ router.post("/", validateSignup, async (req, res) => {
     try {
         const { firstName, lastName, email, password, username } = req.body;
 
+        // Check for existing users with the same email or username
         const existingUser = await User.findOne({
             where: {
                 [Op.or]: [{ email }, { username }],
@@ -98,14 +99,14 @@ router.post("/", validateSignup, async (req, res) => {
             });
         }
 
-        // Check for required fields
+        // Validate required fields
         const errors = {};
-        if (!email) errors.email = "Email is required";
+        if (!email) errors.email = "Invalid email";
         if (!username) errors.username = "Username is required";
         if (!firstName) errors.firstName = "First Name is required";
         if (!lastName) errors.lastName = "Last Name is required";
-        
-        // If there are any errors, respond with a 400 status and the errors
+
+        // If there are any validation errors, respond with a 400 status and the errors
         if (Object.keys(errors).length > 0) {
             return res.status(400).json({
                 message: "Bad Request",
@@ -136,6 +137,7 @@ router.post("/", validateSignup, async (req, res) => {
         // Set the cookie and return a successful response
         await setTokenCookie(res, safeUser);
 
+        // Respond with status 201 and the new user details
         return res.status(201).json({ user: safeUser });
     } catch (error) {
         // Handle Sequelize validation errors
@@ -152,7 +154,7 @@ router.post("/", validateSignup, async (req, res) => {
 
         // Log unexpected errors and return a generic error message
         console.error("User creation error:", error);
-        return res.status(400).json({
+        return res.status(500).json({
             message: "User creation failed",
             errors: { general: error.message },
         });
