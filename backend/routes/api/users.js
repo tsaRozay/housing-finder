@@ -8,6 +8,7 @@ const { Op } = require("sequelize");
 
 const router = express.Router();
 
+// Validation middleware for login
 const validateLogin = [
     check("credential")
         .exists({ checkFalsy: true })
@@ -18,6 +19,7 @@ const validateLogin = [
     handleValidationErrors,
 ];
 
+// Login route
 router.post("/login", validateLogin, async (req, res) => {
     const { credential, password } = req.body;
 
@@ -48,27 +50,29 @@ router.post("/login", validateLogin, async (req, res) => {
     }
 });
 
+// Validation middleware for sign-up
 const validateSignup = [
     check('email')
-      .exists({ checkFalsy: true })
-      .isEmail()
-      .withMessage('Please provide a valid email.'),
+        .exists({ checkFalsy: true })
+        .isEmail()
+        .withMessage('Please provide a valid email.'),
     check('username')
-      .exists({ checkFalsy: true })
-      .isLength({ min: 4 })
-      .withMessage('Please provide a username with at least 4 characters.'),
+        .exists({ checkFalsy: true })
+        .isLength({ min: 4 })
+        .withMessage('Please provide a username with at least 4 characters.'),
     check('username')
-      .not()
-      .isEmail()
-      .withMessage('Username cannot be an email.'),
+        .not()
+        .isEmail()
+        .withMessage('Username cannot be an email.'),
     check('password')
-      .exists({ checkFalsy: true })
-      .isLength({ min: 6 })
-      .withMessage('Password must be 6 characters or more.'),
+        .exists({ checkFalsy: true })
+        .isLength({ min: 6 })
+        .withMessage('Password must be 6 characters or more.'),
     handleValidationErrors
 ];
 
-router.post("/", validateSignup, async (req, res, next) => {
+// Sign-up route
+router.post("/", validateSignup, async (req, res) => {
     const { firstName, lastName, email, password, username } = req.body;
     const hashedPassword = bcrypt.hashSync(password);
 
@@ -94,7 +98,7 @@ router.post("/", validateSignup, async (req, res, next) => {
             lastName,
             email,
             username,
-            password: hashedPassword,
+            hashedPassword,
         });
 
         const safeUser = {
@@ -106,7 +110,7 @@ router.post("/", validateSignup, async (req, res, next) => {
         };
 
         await setTokenCookie(res, safeUser);
-        return res.status(201).json({ user: safeUser });
+        return res.status(201).json(safeUser);
     } catch (error) {
         if (error.name === "SequelizeValidationError") {
             return res.status(400).json({
@@ -120,16 +124,18 @@ router.post("/", validateSignup, async (req, res, next) => {
     }
 });
 
+// Get all users
 router.get("/", async (req, res) => {
     try {
         const users = await User.findAll();
-        res.json(users);
+        res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: "Error retrieving users" });
         console.error(error);
     }
 });
 
+// Get current authenticated user
 router.get("/current", requireAuth, async (req, res) => {
     try {
         if (req.user) {
@@ -154,11 +160,12 @@ router.get("/current", requireAuth, async (req, res) => {
     }
 });
 
+// Get user by ID
 router.get("/:id", async (req, res) => {
     try {
         const user = await User.findByPk(req.params.id);
         if (user) {
-            res.json(user);
+            res.status(200).json(user);
         } else {
             res.status(404).json({ message: "User not found" });
         }
@@ -167,13 +174,14 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+// Update user by ID
 router.patch("/:id", async (req, res) => {
     try {
         const { email, username } = req.body;
         const user = await User.findByPk(req.params.id);
         if (user) {
             await user.update({ email, username });
-            res.json(user);
+            res.status(200).json(user);
         } else {
             res.status(404).json({ message: "User not found" });
         }
@@ -182,9 +190,11 @@ router.patch("/:id", async (req, res) => {
     }
 });
 
+// Logout route
 router.post("/logout", (req, res) => {
     try {
-        res.json({ message: "Logged out successfully" });
+        res.clearCookie("token");
+        res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         res.status(500).json({ message: "Error logging out" });
     }
