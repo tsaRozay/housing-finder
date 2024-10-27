@@ -80,7 +80,9 @@ router.post("/", validateSignup, async (req, res) => {
         const existingUser = await User.findOne({
             where: {
                 [Op.or]: [{ email }, { username }],
-            },
+            }, attributes: {
+                include: ['email']
+            }
         });
 
         // Handle case where user already exists
@@ -92,8 +94,9 @@ router.post("/", validateSignup, async (req, res) => {
             if (existingUser.username === username) {
                 errors.username = "User with that username already exists";
             }
+            console.log(existingUser)
+            console.log(errors);
             return res.status(500).json({
-                message: "User already exists",
                 errors,
             });
         }
