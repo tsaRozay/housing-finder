@@ -10,7 +10,7 @@ router.post("/", requireAuth, async (req, res) => {
         const { name, description, price, country, address, city, state, lat, lng } = req.body;
         const ownerId = req.user.id;
 
-        const newSpot = await Spot.create({
+        const newSpot = await Spot.create([
             ownerId,
             address,
             city,
@@ -21,7 +21,7 @@ router.post("/", requireAuth, async (req, res) => {
             name,
             description,
             price,
-        });
+        ]);
 
         const createdSpot = await Spot.findByPk(newSpot.id, {
             include: [
