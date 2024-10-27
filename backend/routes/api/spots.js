@@ -37,45 +37,8 @@ router.post("/", requireAuth, async (req, res) => {
             description,
             price,
         });
-
-        const createdSpot = await Spot.findByPk(newSpot.id, {
-            include: [
-                {
-                    model: SpotImage,
-                    attributes: ["url", "preview"],
-                    where: { preview: true },
-                    required: false,
-                },
-                {
-                    model: Review,
-                    attributes: [],
-                },
-            ],
-            attributes: {
-                include: [
-                    [Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), "avgRating"],
-                ],
-            },
-            group: ["Spot.id", "SpotImages.url", "SpotImages.preview"],
-        });
-
-        res.status(201).json({
-            id: createdSpot.id,
-            ownerId: createdSpot.ownerId,
-            address: createdSpot.address,
-            city: createdSpot.city,
-            state: createdSpot.state,
-            country: createdSpot.country,
-            lat: createdSpot.lat,
-            lng: createdSpot.lng,
-            name: createdSpot.name,
-            description: createdSpot.description,
-            price: createdSpot.price,
-            createdAt: createdSpot.createdAt,
-            updatedAt: createdSpot.updatedAt,
-            avgRating: parseFloat(createdSpot.get("avgRating")) || null,
-            previewImage: createdSpot.SpotImages[0] ? createdSpot.SpotImages[0].url : null,
-        });
+        console.log(newSpot);
+        res.status(201).json(newSpot);
     } catch (error) {
         res.status(400).json({ message: "Error creating spot", error: error.message });
     }
