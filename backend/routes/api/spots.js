@@ -6,11 +6,26 @@ const { Sequelize } = require("sequelize");
 
 // Create a new spot
 router.post("/", requireAuth, async (req, res) => {
-    try {
-        const { name, description, price, country, address, city, state, lat, lng } = req.body;
-        const ownerId = req.user.id;
+    const { name, description, price, address, city, state, country, lat, lng } = req.body;
+    const ownerId = req.user.id;
 
-        const newSpot = await Spot.create([
+    const errors = {};
+    if (!name) errors.name = "Name is required.";
+    if (!description) errors.description = "Description is required.";
+    if (!price) errors.price = "Price is required.";
+    if (!address) errors.address = "Address is required.";
+    if (!city) errors.city = "City is required.";
+    if (!state) errors.state = "State is required.";
+    if (!country) errors.country = "Country is required.";
+    if (lat === undefined || lat === null) errors.lat = "Latitude is required.";
+    if (lng === undefined || lng === null) errors.lng = "Longitude is required.";
+
+    if (Object.keys(errors).length > 0) {
+        return res.status(400).json({ message: "Validation errors", errors });
+    }
+
+    try {
+        const newSpot = await Spot.create({
             ownerId,
             address,
             city,
@@ -21,7 +36,7 @@ router.post("/", requireAuth, async (req, res) => {
             name,
             description,
             price,
-        ]);
+        });
 
         const createdSpot = await Spot.findByPk(newSpot.id, {
             include: [
