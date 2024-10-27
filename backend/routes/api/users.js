@@ -98,6 +98,7 @@ router.post("/", validateSignup, async (req, res) => {
             console.log(errors);
             return res.status(500).json({
                 errors,
+                message: "User already exists",
             });
         }
 
