@@ -77,11 +77,12 @@ router.post("/", validateSignup, async (req, res) => {
     try {
         const { firstName, lastName, email, password, username } = req.body;
 
-        // Check for existing users with the same email or username
         const existingUser = await User.findOne({
             where: {
                 [Op.or]: [{ email }, { username }],
-            },
+            }, attributes: {
+                include: ['email']
+            }
         });
 
         // Handle case where user already exists
@@ -94,23 +95,8 @@ router.post("/", validateSignup, async (req, res) => {
                 errors.username = "User with that username already exists";
             }
             return res.status(500).json({
+                errors,
                 message: "User already exists",
-                errors,
-            });
-        }
-
-        // Validate required fields
-        const errors = {};
-        if (!email) errors.email = "Invalid email";
-        if (!username) errors.username = "Username is required";
-        if (!firstName) errors.firstName = "First Name is required";
-        if (!lastName) errors.lastName = "Last Name is required";
-
-        // If there are any validation errors, respond with a 400 status and the errors
-        if (Object.keys(errors).length > 0) {
-            return res.status(400).json({
-                message: "Bad Request",
-                errors,
             });
         }
 
@@ -137,7 +123,6 @@ router.post("/", validateSignup, async (req, res) => {
         // Set the cookie and return a successful response
         await setTokenCookie(res, safeUser);
 
-        // Respond with status 201 and the new user details
         return res.status(201).json({ user: safeUser });
     } catch (error) {
         // Handle Sequelize validation errors
@@ -148,7 +133,7 @@ router.post("/", validateSignup, async (req, res) => {
             });
             return res.status(400).json({
                 message: "Validation error",
-                errors,
+               
             });
         }
 
@@ -157,6 +142,7 @@ router.post("/", validateSignup, async (req, res) => {
         return res.status(500).json({
             message: "User creation failed",
             errors: { general: error.message },
+            username,
         });
     }
 });
