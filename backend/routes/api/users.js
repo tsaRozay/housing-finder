@@ -94,8 +94,6 @@ router.post("/", validateSignup, async (req, res) => {
             if (existingUser.username === username) {
                 errors.username = "User with that username already exists";
             }
-            console.log(existingUser)
-            console.log(errors);
             return res.status(500).json({
                 errors,
                 message: "User already exists",
@@ -144,6 +142,7 @@ router.post("/", validateSignup, async (req, res) => {
         return res.status(500).json({
             message: "User creation failed",
             errors: { general: error.message },
+            username,
         });
     }
 });
