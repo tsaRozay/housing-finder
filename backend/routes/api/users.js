@@ -74,7 +74,6 @@ const validateSignup = [
 
 // Sign up Route
 router.post("/", validateSignup, async (req, res) => {
-    try {
         const { firstName, lastName, email, password, username } = req.body;
 
         // Check if user with email or username already exists
@@ -108,13 +107,13 @@ router.post("/", validateSignup, async (req, res) => {
         if (!firstName) errors.firstName = "First Name is required";
         if (!lastName) errors.lastName = "Last Name is required";
 
-        // If there are validation errors, respond with a 400 status and the error messages
-        if (Object.keys(errors).length > 0) {
-            return res.status(400).json({
-                message: "Bad Request",
-                errors,
-            });
-        }
+        // // If there are validation errors, respond with a 400 status and the error messages
+        // if (Object.keys(errors).length > 0) {
+        //     return res.status(400).json({
+        //         message: "Bad Request",
+        //         errors,
+        //     });
+        // }
 
         // Hash the password and create a new user
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -141,28 +140,8 @@ router.post("/", validateSignup, async (req, res) => {
 
         // Respond with status 201 and the new user details
         return res.status(201).json({ user: safeUser });
-    } catch (error) {
-        // Handle Sequelize validation errors specifically
-        if (error.name === "SequelizeValidationError") {
-            const errors = {};
-            error.errors.forEach((err) => {
-                errors[err.path] = err.message;
-            });
-            return res.status(400).json({
-                message: "Validation error",
-                errors,
-            });
-        }
-
-        // Log unexpected errors and return a generic error message
-        console.error("User creation error:", error);
-        return res.status(500).json({
-            message: "User creation failed",
-            errors: { general: error.message },
-        });
-    }
-});
-
+}
+)
 
 // Get all users Route
 router.get("/", async (req, res) => {
