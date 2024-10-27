@@ -80,9 +80,7 @@ router.post("/", validateSignup, async (req, res) => {
         const existingUser = await User.findOne({
             where: {
                 [Op.or]: [{ email }, { username }],
-            }, attributes: {
-                include: ['email']
-            }
+            },
         });
 
         // Handle case where user already exists
@@ -95,8 +93,23 @@ router.post("/", validateSignup, async (req, res) => {
                 errors.username = "User with that username already exists";
             }
             return res.status(500).json({
-                errors,
                 message: "User already exists",
+                errors,
+            });
+        }
+
+        // Check for required fields
+        const errors = {};
+        if (!email) errors.email = "Email is required";
+        if (!username) errors.username = "Username is required";
+        if (!firstName) errors.firstName = "First Name is required";
+        if (!lastName) errors.lastName = "Last Name is required";
+        
+        // If there are any errors, respond with a 400 status and the errors
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({
+                message: "Bad Request",
+                errors,
             });
         }
 
@@ -139,10 +152,9 @@ router.post("/", validateSignup, async (req, res) => {
 
         // Log unexpected errors and return a generic error message
         console.error("User creation error:", error);
-        return res.status(500).json({
+        return res.status(400).json({
             message: "User creation failed",
             errors: { general: error.message },
-            username,
         });
     }
 });
