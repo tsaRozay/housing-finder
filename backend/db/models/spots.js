@@ -11,9 +11,13 @@ module.exports = (sequelize, DataTypes) => {
                 onDelete: "CASCADE",
             });
             Spot.belongsTo(models.User, {
-                foreignKey: "userId",
+                foreignKey: "ownerId",
                 onDelete: "SET NULL",
             });
+            Spot.hasMany(models.SpotImage, {
+                foreignKey : "spotId",
+                onDelete: "CASCADE",
+            })
         }
     }
 

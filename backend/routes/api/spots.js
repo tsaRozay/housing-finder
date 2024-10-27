@@ -177,6 +177,7 @@ router.get("/", async (req, res) => {
 
         res.status(200).json(formattedSpots);
     } catch (error) {
+        console.log(error);
         res.status(400).json({ message: "Error retrieving spots" });
     }
 });
