@@ -81,7 +81,9 @@ router.post("/", validateSignup, async (req, res) => {
         const existingUser = await User.findOne({
             where: {
                 [Op.or]: [{ email }, { username }],
-            },
+            }, attributes : {
+                include: ['email']
+            }
         });
 
         // If user exists, return a 500 error with appropriate messages
