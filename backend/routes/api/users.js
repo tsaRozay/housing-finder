@@ -75,72 +75,72 @@ const validateSignup = [
 ];
 
 // Get the Current User
-router.get("/current", requireAuth, async (req, res) => {
-    try {
-        if (req.user) {
-            const userId = req.user.id;
-            const user = await User.findByPk(userId);
+// router.get("/current", requireAuth, async (req, res) => {
+//     try {
+//         if (req.user) {
+//             const userId = req.user.id;
+//             const user = await User.findByPk(userId);
 
-            if (user) {
-                return res.status(200).json({
-                    user: {
-                        id: user.id,
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        email: user.email,
-                        username: user.username,
-                    },
-                });
-            }
-        }
-        res.status(200).json({ user: null });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+//             if (user) {
+//                 return res.status(200).json({
+//                     user: {
+//                         id: user.id,
+//                         firstName: user.firstName,
+//                         lastName: user.lastName,
+//                         email: user.email,
+//                         username: user.username,
+//                     },
+//                 });
+//             }
+//         }
+//         res.status(200).json({ user: null });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// });
 
 // Log In a User
-router.post("/session", async (req, res) => {
-    const { credential, password } = req.body;
+// router.post("/session", async (req, res) => {
+//     const { credential, password } = req.body;
 
-    const errors = {};
-    if (!credential) errors.credential = "Email or username is required";
-    if (!password) errors.password = "Password is required";
+//     const errors = {};
+//     if (!credential) errors.credential = "Email or username is required";
+//     if (!password) errors.password = "Password is required";
 
-    // If there are validation errors, respond with a 400 status and the error messages
-    if (Object.keys(errors).length > 0) {
-        return res.status(400).json({
-            message: "Bad Request",
-            errors,
-        });
-    }
+//     // If there are validation errors, respond with a 400 status and the error messages
+//     if (Object.keys(errors).length > 0) {
+//         return res.status(400).json({
+//             message: "Bad Request",
+//             errors,
+//         });
+//     }
 
-    // Find user by email or username
-    const user = await User.findOne({
-        where: {
-            [Op.or]: [{ email: credential }, { username: credential }],
-        },
-    });
+//     // Find user by email or username
+//     const user = await User.findOne({
+//         where: {
+//             [Op.or]: [{ email: credential }, { username: credential }],
+//         },
+//     });
 
-    // Check if user exists and password matches
-    if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
-        return res.status(401).json({
-            message: "Invalid credentials",
-        });
-    }
+//     // Check if user exists and password matches
+//     if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
+//         return res.status(401).json({
+//             message: "Invalid credentials",
+//         });
+//     }
 
-    const safeUser = {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        username: user.username,
-    };
+//     const safeUser = {
+//         id: user.id,
+//         firstName: user.firstName,
+//         lastName: user.lastName,
+//         email: user.email,
+//         username: user.username,
+//     };
 
-    await setTokenCookie(res, safeUser);
+//     await setTokenCookie(res, safeUser);
 
-    return res.status(200).json({ user: safeUser });
-});
+//     return res.status(200).json({ user: safeUser });
+// });
 
 // Sign Up a User
 router.post("/", validateSignup, async (req, res) => {

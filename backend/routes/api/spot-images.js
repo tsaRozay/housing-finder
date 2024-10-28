@@ -3,7 +3,7 @@ const router = express.Router();
 const { Spot, SpotImage } = require("../../db/models");
 
 // Delete a Spot Image
-router.delete("/spot-images/:imageId", async (req, res) => {
+router.delete("/:imageId", async (req, res) => {
     const image = await SpotImage.findByPk(req.params.imageId);
 
     // Error response: Couldn't find a Spot Image with the specified id
