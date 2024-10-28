@@ -6,8 +6,8 @@ const amenitiesRouter = require("./amenities.js");
 const bookingsRouter = require("./bookings.js");
 const favoritesRouter = require("./favorites.js");
 const reviewsRouter = require("./reviews.js");
-const reviewImagesRouter = require("./reviewImages.js");
-const spotImagesRouter = require("./spotImages.js");
+const reviewImagesRouter = require("./review-images.js");
+const spotImagesRouter = require("./spot-images.js");
 const spotsRouter = require("./spots.js");
 const csrfRouter = require("./csrf"); // Import the csrf router
 const { restoreUser } = require("../../utils/auth.js");
@@ -44,9 +44,9 @@ router.use("/favorites", favoritesRouter);
 
 router.use("/reviews", reviewsRouter);
 
-router.use("/reviewImages", reviewImagesRouter);
+router.use("/review-images", reviewImagesRouter);
 
-router.use("/spotImages", spotImagesRouter);
+router.use("/spot-images", spotImagesRouter);
 
 router.use("/spots", spotsRouter);
 
