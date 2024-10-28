@@ -73,17 +73,6 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {msg: "City is required"}
       }
     },
-    state: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: {
-          args: [1, 50],
-          msg: "State must be between 1 and 50 characters"
-        },
-        notEmpty: {msg: "State address is required"}
-      }
-    },
     country: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -93,6 +82,17 @@ module.exports = (sequelize, DataTypes) => {
           msg: "Address must be between 1 and 50 characters"
         },
         notEmpty: {msg: "Street address is required"}
+      }
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: {
+          args: [1, 50],
+          msg: "State must be between 1 and 50 characters"
+        },
+        notEmpty: {msg: "State address is required"}
       }
     },
     lat: {
@@ -129,6 +129,13 @@ module.exports = (sequelize, DataTypes) => {
         isInt: true
       }
     },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Description is required' }
+      }
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -139,13 +146,6 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Name must be less than 50 characters'
         },
         notEmpty: { msg: 'Name is required' }
-      }
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: { msg: 'Description is required' }
       }
     },
     price: {
