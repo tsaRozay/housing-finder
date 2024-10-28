@@ -62,11 +62,11 @@ const countriesRoutes = require("./routes/api/countries");
 const amenitiesRoutes = require("./routes/api/amenities");
 const bookingsRoute = require("./routes/api/bookings");
 const reviewsRoute = require("./routes/api/reviews");
-const spotImagesRoute = require("./routes/api/spotImages");
+const spotImagesRoute = require("./routes/api/spot-images");
 const spotsRoute = require("./routes/api/spots");
 const usersRoute = require("./routes/api/users");
 const sessionRoute = require("./routes/api/session");
-const reviewImagesRoute = require("./routes/api/reviewImages");
+const reviewImagesRoute = require("./routes/api/review-images");
 
 //Using routes
 app.use("/api/favorites", favoritesRoute);
@@ -74,11 +74,11 @@ app.use("/api/countries", countriesRoutes);
 app.use("/api/amenities", amenitiesRoutes);
 app.use("/api/bookings", bookingsRoute);
 app.use("/api/reviews", reviewsRoute);
-app.use("/api/spotImages", spotImagesRoute);
+app.use("/api/spot-images", spotImagesRoute);
 app.use("/api/spots", spotsRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/session", sessionRoute);
-app.use("/api/reviewImages", reviewImagesRoute);
+app.use("/api/review-images", reviewImagesRoute);
 
 // Catch unhandled requests and forward to error handler.
 app.use((_req, _res, next) => {

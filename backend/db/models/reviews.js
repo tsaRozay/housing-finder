@@ -1,22 +1,21 @@
-'use strict';
+"use strict";
 
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
     class Review extends Model {
         static associate(models) {
-            // Define associations here
             Review.belongsTo(models.User, {
-                foreignKey: 'userId',
-                onDelete: 'CASCADE',
+                foreignKey: "userId",
+                onDelete: "CASCADE",
             });
             Review.belongsTo(models.Spot, {
-                foreignKey: 'spotId',
-                onDelete: 'CASCADE',
+                foreignKey: "spotId",
+                onDelete: "CASCADE",
             });
             Review.hasMany(models.ReviewImage, {
-                foreignKey: 'reviewId',
-                onDelete: 'CASCADE',
+                foreignKey: "reviewId",
+                onDelete: "CASCADE",
             });
         }
     }
@@ -27,23 +26,23 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'Users', 
-                    key: 'id',
+                    model: "Users",
+                    key: "id",
                 },
             },
             spotId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'Spots',
-                    key: 'id',
+                    model: "Spots",
+                    key: "id",
                 },
             },
-            content: {
+            review: {
                 type: DataTypes.TEXT,
                 allowNull: false,
             },
-            rating: {
+            stars: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 validate: {
@@ -64,7 +63,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         {
             sequelize,
-            modelName: 'Review',
+            modelName: "Review",
+            timestamps: true,
         }
     );
 
