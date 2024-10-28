@@ -9,7 +9,7 @@ const reviewsRouter = require("./reviews.js");
 const reviewImagesRouter = require("./review-images.js");
 const spotImagesRouter = require("./spot-images.js");
 const spotsRouter = require("./spots.js");
-const csrfRouter = require("./csrf"); // Import the csrf router
+const csrfRouter = require("./csrf");
 const { restoreUser } = require("../../utils/auth.js");
 
 // Use the CSRF router
@@ -36,11 +36,7 @@ router.use("/session", sessionRouter);
 
 router.use("/users", usersRouter);
 
-router.use("/amenities", amenitiesRouter);
-
 router.use("/bookings", bookingsRouter);
-
-router.use("/favorites", favoritesRouter);
 
 router.use("/reviews", reviewsRouter);
 
