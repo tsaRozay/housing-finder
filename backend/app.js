@@ -57,9 +57,6 @@ app.get("/", (req, res) => {
 app.use(routes);
 
 // Importing routes
-const favoritesRoute = require("./routes/api/favorites");
-const countriesRoutes = require("./routes/api/countries");
-const amenitiesRoutes = require("./routes/api/amenities");
 const bookingsRoute = require("./routes/api/bookings");
 const reviewsRoute = require("./routes/api/reviews");
 const spotImagesRoute = require("./routes/api/spot-images");
@@ -69,9 +66,6 @@ const sessionRoute = require("./routes/api/session");
 const reviewImagesRoute = require("./routes/api/review-images");
 
 //Using routes
-app.use("/api/favorites", favoritesRoute);
-app.use("/api/countries", countriesRoutes);
-app.use("/api/amenities", amenitiesRoutes);
 app.use("/api/bookings", bookingsRoute);
 app.use("/api/reviews", reviewsRoute);
 app.use("/api/spot-images", spotImagesRoute);
