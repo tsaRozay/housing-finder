@@ -1,105 +1,138 @@
+// backend/routes/api/bookings.js
+
 const express = require("express");
+const { requireAuth } = require("../../utils/auth");
+const {
+  User,
+  Spot,
+  SpotImage,
+  Review,
+  ReviewImage,
+  Booking,
+  sequelize,
+} = require("../../db/models");
 const router = express.Router();
-const { Spot, Booking } = require("../../db/models");
 
-// Get all bookings
-router.get("/", async (req, res) => {
-    try {
-        const bookings = await Booking.findAll();
-        res.json(bookings);
-    } catch (error) {
-        res.status(500).json({
-            message: "An error occurred",
-            error: error.message,
-        });
-    }
+// Get all of the Current User's Bookings
+router.get("/current", requireAuth, async (req, res) => {
+  const userId = req.user.id;
+
+  const bookings = await Booking.findAll({
+    where: { userId: userId },
+    include: [
+      {
+        model: Spot,
+        attributes: [
+          "id",
+          "ownerId",
+          "address",
+          "city",
+          "state",
+          "country",
+          "lat",
+          "lng",
+          "name",
+          "price",
+        ],
+        include: [
+          {
+            model: SpotImage,
+            where: { preview: true },
+            attributes: ["url"],
+            required: false,
+          },
+        ],
+      },
+    ],
+  });
+
+  const formattedBookings = bookings.map((booking) => {
+    const spot = booking.Spot;
+    const previewImage =
+      spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null;
+
+    return {
+      id: booking.id,
+      spotId: booking.spotId,
+      Spot: {
+        id: spot.id,
+        ownerId: spot.ownerId,
+        address: spot.address,
+        city: spot.city,
+        state: spot.state,
+        country: spot.country,
+        lat: spot.lat,
+        lng: spot.lng,
+        name: spot.name,
+        price: spot.price,
+        previewImage: previewImage,
+      },
+      userId: booking.userId,
+      startDate: booking.startDate,
+      endDate: booking.endDate,
+      createdAt: booking.createdAt,
+      updatedAt: booking.updatedAt,
+    };
+  });
+
+  return res.json({ Bookings: formattedBookings });
 });
 
-// Get all current user's bookings
-router.get("/bookings/current", async (req, res) => {
-    try {
-        const userId = req.user.id;
-        const bookings = await Booking.findAll({ where: { userId } });
-        res.json(bookings);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+// Edit a Booking
+router.put('/:bookingid', requireAuth, async (req, res) => {
+    const { bookingid } = req.params;
+    const { startDate, endDate } = req.body;
+
+    const booking = await Booking.findByPk(bookingid);
+    if (!booking) {
+        return res.status(404).json({ message: "Booking couldn't be found" });
     }
+
+    // Check if the booking belongs to the user
+    if (booking.userId !== req.user.id) {
+        return res.status(403).json({ message: "Forbidden" });
+    }
+
+    // Validation checks
+    if (new Date(startDate) <= new Date()) {
+        return res.status(400).json({ message: "startDate cannot be in the past" });
+    }
+
+    if (new Date(startDate) >= new Date(endDate)) {
+        return res.status(400).json({ message: "endDate cannot be on or before startDate" });
+    }
+
+    // Update booking dates
+    booking.startDate = startDate;
+    booking.endDate = endDate;
+
+    await booking.save();
+    return res.json(booking);
 });
 
-// Get all bookings for a spot
-router.get("/spots/:spotId/bookings", async (req, res) => {
-    try {
-        const bookings = await Booking.findAll({
-            where: { spotId: req.params.spotId },
-        });
-        res.json(bookings);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+// Delete a Booking
+router.delete('/:bookingid', requireAuth, async (req, res) => {
+    const { bookingid } = req.params;
+
+    const booking = await Booking.findByPk(bookingid);
+    if (!booking) {
+        return res.status(404).json({ message: "Booking couldn't be found" });
     }
+
+    // Only allow deletion if the user owns the booking or the spot
+    const spot = await Spot.findByPk(booking.spotId);
+    if (booking.userId !== req.user.id && spot.ownerId !== req.user.id) {
+        return res.status(403).json({ message: "Forbidden" });
+    }
+
+    // Prevent deletion of past bookings
+    if (new Date() >= new Date(booking.endDate)) {
+        return res.status(403).json({ message: "Forbidden" });
+    }
+
+    await booking.destroy();
+    return res.json({ message: "Successfully deleted" });
 });
 
-// Create a booking for a spot
-router.post("/spots/:spotId/bookings", async (req, res) => {
-    try {
-        const { startDate, endDate, userId } = req.body;
-        const spot = await Spot.findByPk(req.params.spotId);
-
-        if (spot) {
-            const booking = await Booking.create({
-                startDate,
-                endDate,
-                userId,
-                spotId: spot.id,
-            });
-            res.status(201).json(booking);
-        } else {
-            res.status(404).json({ message: "Spot not found" });
-        }
-    } catch (error) {
-        res.status(500).json({
-            message: "An error occurred",
-            error: error.message,
-        });
-    }
-});
-
-// Edit a booking
-router.patch("/bookings/:bookingId", async (req, res) => {
-    try {
-        const booking = await Booking.findByPk(req.params.id);
-
-        if (booking) {
-            const { startDate, endDate } = req.body;
-            await booking.update({ startDate, endDate });
-            res.json(booking);
-        } else {
-            res.status(404).json({ message: "Booking not found" });
-        }
-    } catch (error) {
-        res.status(500).json({
-            message: "An error occurred",
-            error: error.message,
-        });
-    }
-});
-
-// Delete a booking
-router.delete("/bookings/:bookingId", async (req, res) => {
-    try {
-        const booking = await Booking.findByPk(req.params.id);
-
-        if (booking) {
-            await booking.destroy();
-            res.status(200).json({ message: "Booking deleted successfully" });
-        } else {
-            res.status(404).json({ message: "Booking not found" });
-        }
-    } catch (error) {
-        res.status(500).json({
-            message: "An error occurred",
-            error: error.message,
-        });
-    }
-});
 
 module.exports = router;
