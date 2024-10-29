@@ -1,12 +1,8 @@
-// backend/utils/validation.js
 const { validationResult } = require('express-validator');
-
-// middleware for formatting errors from express-validator middleware
-// (to customize, see express-validator's documentation)
 const handleValidationErrors = (req, res, next) => {
   const validationErrors = validationResult(req);
 
-  if (!validationErrors.isEmpty()) { 
+  if (!validationErrors.isEmpty()) {
     const errors = {};
     validationErrors
       .array()
@@ -17,30 +13,11 @@ const handleValidationErrors = (req, res, next) => {
       "credential": "Email or username is required",
       "password": "Password is required",
       "username": "Username is required"
-    };
+    }
     err.status = 400;
     next(err);
   }
   next();
-};
-
-const validateQueryParams = (query) => {
-  const errors = {};
-  const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = query;
-
-  const pageNum = parseInt(page);
-  const pageSize = parseInt(size);
-
-  if (pageNum < 1) errors.page = "Page must be greater than or equal to 1";
-  if (pageSize < 1 || pageSize > 20) errors.size = "Size must be between 1 and 20";
-  if (minLat && isNaN(minLat)) errors.minLat = "Minimum latitude is invalid";
-  if (maxLat && isNaN(maxLat)) errors.maxLat = "Maximum latitude is invalid";
-  if (minLng && isNaN(minLng)) errors.minLng = "Minimum longitude is invalid";
-  if (maxLng && isNaN(maxLng)) errors.maxLng = "Maximum longitude is invalid";
-  if (minPrice && minPrice < 0) errors.minPrice = "Minimum price must be greater than or equal to 0";
-  if (maxPrice && maxPrice < 0) errors.maxPrice = "Maximum price must be greater than or equal to 0";
-
-  return errors;
 };
 
 const validateSpot = (req, res, next) => {
@@ -81,9 +58,34 @@ const validateReview = (req, res, next) => {
   next();
 }
 
+const validateUserBody = (req, res, next) => {
+  const { email, username, firstName, lastName } = req.body;
+  const error = {};
+  if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    error.email = 'Invalid email';
+  }
+  if (!username || username.trim() === '') {
+    error.username = "Username is required";
+  }
+  if (!firstName || firstName.trim() === '') {
+    error.firstName = "First Name is required";
+  }
+  if(!lastName || lastName.trim() === '') {
+    error.lastName = "Last Name is required";
+  }
+  if (Object.keys(error).length > 0) {
+    return res.status(400).json({
+      message: 'Bad Request',
+      error
+    });
+  }
+  next();
+}
+
 module.exports = {
   handleValidationErrors,
-  validateQueryParams,
+  validateReview,
   validateSpot,
-  validateReview
+  validateUserBody
+
 };
