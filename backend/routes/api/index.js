@@ -8,17 +8,6 @@ const spotsRouter = require('./spots.js');
 const reviewRouter = require('./reviews.js');
 
 
-// GET /api/set-token-cookie
-router.get('/set-token-cookie', async (_req, res) => {
-  const user = await User.findOne({
-    where: {
-      username: 'freddyTheDragon1'
-    }
-  });
-  setTokenCookie(res, user);
-  return res.json({ user: user });
-});
-
 // GET /api/restore-user
 const { restoreUser } = require('../../utils/auth.js');
 const spotimage = require('../../db/models/spotimage.js');
