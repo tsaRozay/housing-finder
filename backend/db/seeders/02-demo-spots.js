@@ -1,5 +1,7 @@
 "use strict";
 
+const { Spot } = require("../models");
+
 /** @type {import('sequelize-cli').Migration} */
 let options = {};
 if (process.env.NODE_ENV === "production") {
@@ -24,8 +26,7 @@ module.exports = {
                     description:
                         "Stay at the iconic Capsule Corp, home of Bulma and Vegeta, with high-tech amenities and access to the latest technology.",
                     price: 150,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 2,
@@ -39,8 +40,7 @@ module.exports = {
                     description:
                         "Relax at Master Roshi's Kame House, a peaceful retreat with a beautiful ocean view and a turtle companion.",
                     price: 100,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 3,
@@ -54,8 +54,7 @@ module.exports = {
                     description:
                         "Experience the serenity of Kami's Lookout, where you can meditate and enjoy a breathtaking view of Earth.",
                     price: 200,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 1,
@@ -69,8 +68,7 @@ module.exports = {
                     description:
                         "Train under King Kai on his planet, with gravity training and access to legendary martial arts wisdom.",
                     price: 300,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 2,
@@ -84,8 +82,7 @@ module.exports = {
                     description:
                         "Stay at The Lookout, a magical place where the Dragon Balls are kept safe. Enjoy a mystical experience!",
                     price: 250,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 3,
@@ -99,8 +96,7 @@ module.exports = {
                     description:
                         "Venture across the planets in this fully equipped, galactic traveler. This enormous spaceship is perfect for those with a taste for adventure.",
                     price: 300,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 1,
@@ -114,8 +110,7 @@ module.exports = {
                     description:
                         "This small, personal spaceship is ideal for solo adventures who need to get from one planet to another at lightning speed!",
                     price: 200,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 2,
@@ -129,8 +124,7 @@ module.exports = {
                     description:
                         "Welcome to the chaotic and fun residence of Majin Buu! Perfect for those who like quirky accommodations with a twist of danger!",
                     price: 350,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 3,
@@ -144,8 +138,7 @@ module.exports = {
                     description:
                         "Enjoy this peaceful residence located on a quiet plateau, which offers unmatched views of the surrounding landscape.",
                     price: 300,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 1,
@@ -159,8 +152,7 @@ module.exports = {
                     description:
                         "Nestled in the peaceful Mt. Paozu, this charming home is perfect for nature lovers who want to escape city life, ideal for families or solo travelers looking for tranquility.",
                     price: 350,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 2,
@@ -174,8 +166,7 @@ module.exports = {
                     description:
                         "Stay close to the action with front-row seats, ideal for those who love a good fight - who knows, you might even get to see Goku in action!",
                     price: 200,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 3,
@@ -189,8 +180,7 @@ module.exports = {
                     description:
                         "Step inside this isolated, limitless dimension where time flows differently!",
                     price: 225,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 1,
@@ -204,8 +194,7 @@ module.exports = {
                     description:
                         "Stay at the top of this sacred site, which offers unparalleled views of the world below.",
                     price: 325,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 2,
@@ -219,8 +208,7 @@ module.exports = {
                     description:
                         "This lush, verdant planet is perfect for explorers and adventurers who want to experience the beauty of Universe 6.",
                     price: 600,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 3,
@@ -234,8 +222,7 @@ module.exports = {
                     description:
                         "Stay at the Supreme Kai's sacred domain, a breathtaking realm that offers peace and contemplation.",
                     price: 700,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 1,
@@ -249,8 +236,7 @@ module.exports = {
                     description:
                         "The beautiful, peaceful planet known for its Dragon Balls. Perfect for nature lovers and spiritual seekers alike.",
                     price: 500,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
                 {
                     ownerId: 2,
@@ -264,8 +250,7 @@ module.exports = {
                     description:
                         "Experience the quiet serenity of Earth's moon. A perfect getaway for stargazers and romantic souls.",
                     price: 300,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
+                    
                 },
             ],
             {}
@@ -273,6 +258,30 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
-        await queryInterface.bulkDelete( options, null, {});
+        options.tableName = "Spots"
+        const Op = Sequelize.Op;
+        return queryInterface.bulkDelete( options, {
+            name : {
+                [Op.in] : [
+                    "Capsule Corp",
+    "Kame House",
+    "Kami's Lookout",
+    "King Kai's Planet",
+    "The Lookout",
+    "Frieza's Spaceship",
+    "Goku's Saiyan Pod",
+    "Majin Buu's House",
+    "Grand Elder Guru's House",
+    "Goku's House",
+    "The World Martial Arts Tournament Arena",
+    "The Hyperbolic Time Chamber",
+    "Korin's Tower",
+    "Planet Sadala",
+    "Supreme Kai's Planet",
+    "Planet Namek",
+    "Earth's Moon"
+                ]
+            }
+        });
     },
 };
