@@ -1,64 +1,46 @@
-'use strict';
+"use strict";
 
-const { Model, Validator } = require('sequelize');
+const { Model, Validator } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      User.hasMany(models.Spot, {
-        foreignKey: 'ownerId',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      });
-      User.hasMany(models.Booking, {
-        foreignKey: 'userId',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      });
-      User.hasMany(models.Review, {
-        foreignKey: 'userId',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      });
+      // define association here
+      User.hasMany(models.Spot, { foreignKey: 'ownerId' });
+      User.hasMany(models.Booking, { foreignKey: 'userId' });
+      User.hasMany(models.Review, { foreignKey: 'userId' });
     }
   }
 
-  const stringValidation = (fieldName, minLength, maxLength) => ({
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      len: {
-        args: [minLength, maxLength],
-        msg: `${fieldName} must be between ${minLength} and ${maxLength} characters`
-      },
-      notEmpty: { msg: `${fieldName} is required` },
-      notNull: { msg: `${fieldName} is required` }
-    }
-  });
-
   User.init(
     {
-      firstName: stringValidation('First name', 1, 50),
-      lastName: stringValidation('Last name', 1, 50),
+      firstName: {
+        type: DataTypes.STRING,
+      },
+      lastName: {
+        type: DataTypes.STRING,
+      },
       username: {
-        ...stringValidation('Username', 4, 30),
+        type: DataTypes.STRING,
+        allowNull: false,
         unique: true,
         validate: {
-          ...stringValidation('Username', 4, 30).validate,
+          len: [4, 30],
           isNotEmail(value) {
             if (Validator.isEmail(value)) {
-              throw new Error('Cannot be an email.');
+              throw new Error("Cannot be an email.");
             }
-          }
-        }
+          },
+        },
       },
       email: {
-        ...stringValidation('Email', 3, 256),
+        type: DataTypes.STRING,
+        allowNull: false,
         unique: true,
         validate: {
-          ...stringValidation('Email', 3, 256).validate,
-          isEmail: { args: [true], msg: "Invalid email" }
-        }
+          len: [3, 256],
+          isEmail: true,
+        },
       },
       hashedPassword: {
         type: DataTypes.STRING.BINARY,
@@ -70,16 +52,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'User',
+      modelName: "User",
       defaultScope: {
-        attributes: { exclude: ['hashedPassword', 'email', 'createdAt', 'updatedAt'] },
+        attributes: {
+          exclude: ['hashedPassword', 'email', 'createdAt', 'updatedAt'],
+        },
       },
-      scopes: {
-        currentUser: { attributes: { exclude: ["hashedPassword", "createdAt", "updatedAt"] } },
-        loginUser: { attributes: { exclude: ["createdAt", "updatedAt"] } }
-      }
     }
   );
-
   return User;
 };
