@@ -1,22 +1,18 @@
 // backend/routes/index.js
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const apiRouter = require("./api"); // Import the main API router
+const apiRouter = require('./api');
 
 
-// Use the API router for the main API routes
-router.use("/api", apiRouter);
-
-// Keep this route to test frontend setup in Mod 5
-router.post('/test', function (req, res) {
-    res.json({ requestBody: req.body });
+// Add a XSRF-TOKEN cookie
+router.get("/api/csrf/restore", (req, res) => {
+  const csrfToken = req.csrfToken();
+  res.cookie("XSRF-TOKEN", csrfToken);
+  res.status(200).json({
+    'XSRF-Token': csrfToken,
   });
-  
-
-// Sample hello/world route
-router.get("/hello/world", function (req, res) {
-    res.cookie("XSRF-TOKEN", req.csrfToken());
-    res.send("Hello World!");
 });
+
+router.use('/api', apiRouter);
 
 module.exports = router;
