@@ -1,5 +1,3 @@
-// migration reviewImages
-
 'use strict';
 
 let options = {};
