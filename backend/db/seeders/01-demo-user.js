@@ -1,95 +1,61 @@
-"use strict";
+'use strict';
 
-const { User } = require("../models");
+const { User } = require('../models');
 const bcrypt = require("bcryptjs");
 
 let options = {};
-if (process.env.NODE_ENV === "production") {
-    options.schema = process.env.SCHEMA;
-    options.tableName = "Users";
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-    async up(queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
+    await User.bulkCreate([
+      {
+        firstName: 'user1first',
+        lastName: 'user1last',
+        email: 'user1@user.io',
+        username: 'FakeUser1',
+        hashedPassword: bcrypt.hashSync('password'),
+      },
+      {
+        firstName: 'user2first',
+        lastName: 'user2last',
+        email: 'user2@user.io',
+        username: 'FakeUser2',
+        hashedPassword: bcrypt.hashSync('password2'),
+      },
+      {
+        firstName: 'user3first',
+        lastName: 'user3last',
+        email: 'user3@user.io',
+        username: 'FakeUser3',
+        hashedPassword: bcrypt.hashSync('password3'),
+      },
+      {
+        firstName: 'user4first',
+        lastName: 'user4last',
+        email: 'user4@user.io',
+        username: 'FakeUser4',
+        hashedPassword: bcrypt.hashSync('password4'),
 
-        try {
-            await User.bulkCreate(
-                [
-                    {
-                        email: "demo@user.io",
-                        username: "Demo-lition",
-                        hashedPassword: bcrypt.hashSync("password", 10),
-                        firstName: "Demo",
-                        lastName: "User",
-                        // profilePic: 'https://example.com/demo-pic.jpg', // Add a placeholder profile pic
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                    },
-                    {
-                        email: "user1@user.io",
-                        username: "FakeUser1",
-                        hashedPassword: bcrypt.hashSync("password2", 10),
-                        firstName: "Fake",
-                        lastName: "User1",
-                        // profilePic: 'https://example.com/fakeuser1-pic.jpg',
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                    },
-                    {
-                        email: "user2@user.io",
-                        username: "FakeUser2",
-                        hashedPassword: bcrypt.hashSync("password3", 10),
-                        firstName: "Fake",
-                        lastName: "User2",
-                        // profilePic: 'https://example.com/fakeuser2-pic.jpg',
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                    },
-                    {
-                        email: "goku@dbz.io",
-                        username: "Goku",
-                        hashedPassword: bcrypt.hashSync("kakarot", 10),
-                        firstName: "Son",
-                        lastName: "Goku",
-                        // profilePic: 'https://example.com/goku-pic.jpg',
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                    },
-                    {
-                        email: "vegeta@dbz.io",
-                        username: "Vegeta",
-                        hashedPassword: bcrypt.hashSync("prince", 10),
-                        firstName: "Vegeta",
-                        lastName: "Saiyan",
-                        // profilePic: 'https://example.com/vegeta-pic.jpg',
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                    },
-                ],
-                { validate: true }
-            );
-        } catch (error) {
-            console.error("Error seeding users:", error.message);
-        }
-    },
+      },
+      {
+        firstName: 'user5first',
+        lastName: 'user5last',
+        email: 'user5@user.io',
+        username: 'FakeUser5',
+        hashedPassword: bcrypt.hashSync('password5'),
+      }
+    ], { validate: true });
+  },
 
-    async down(queryInterface, Sequelize) {
-
-        const Op = Sequelize.Op;
-        return queryInterface.bulkDelete(
-            options,
-            {
-                username: {
-                    [Op.in]: [
-                        "Demo-lition",
-                        "FakeUser1",
-                        "FakeUser2",
-                        "Goku",
-                        "Vegeta",
-                    ],
-                },
-            },
-            {}
-        );
-    },
+  async down(queryInterface, Sequelize) {
+    options.tableName = 'Users';
+    const Op = Sequelize.Op;
+    return queryInterface.bulkDelete(options,{
+      username: { [Op.in]: ['FakeUser1', 'FakeUser2', 'FakeUser3', 'FakeUser4', 'FakeUser5'] }
+    }, {});
+  }
 };
