@@ -1,82 +1,72 @@
+//Migration Spot
 'use strict';
 
 let options = {};
-if (process.env.NODE_ENV === "production") {
-    options.schema = process.env.SCHEMA;
-    options.tableName = 'Spots'
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-    async up(queryInterface, Sequelize) {
-        await queryInterface.createTable(
-            options,
-            {
-                id: {
-                    allowNull: false,
-                    autoIncrement: true,
-                    primaryKey: true,
-                    type: Sequelize.INTEGER,
-                },
-                ownerId: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    references: {
-                        model: 'Users', 
-                        key: 'id'
-                    },
-                    onDelete: 'CASCADE'
-                },
-                address: {
-                    type: Sequelize.STRING,
-                    allowNull: false,
-                },
-                city: {
-                    type: Sequelize.STRING,
-                    allowNull: false,
-                },
-                state: {
-                    type: Sequelize.STRING,
-                    allowNull: false,
-                },
-                country: {
-                    type: Sequelize.STRING,
-                    allowNull: false,
-                },
-                lat: {
-                    type: Sequelize.DECIMAL,
-                    allowNull: false,
-                },
-                lng: {
-                    type: Sequelize.DECIMAL,
-                    allowNull: false,
-                },
-                name: {
-                    type: Sequelize.STRING,
-                    allowNull: false,
-                },
-                description: {
-                    type: Sequelize.STRING,
-                    allowNull: false,
-                },
-                price: {
-                    type: Sequelize.DECIMAL,
-                    allowNull: false,
-                },
-                createdAt: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-                },
-                updatedAt: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-                },
-            },
-        );
-    },
-
-    async down(queryInterface, Sequelize) {
-        return queryInterface.dropTable("Spots", options);
-    },
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("Spots", {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      ownerId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        
+      },
+      address: {
+        allowNull: false,
+        unique: true,
+        type: Sequelize.STRING
+      },
+      city: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      state: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      country: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      lat: {
+        type: Sequelize.DECIMAL
+      },
+      lng: {
+        type: Sequelize.DECIMAL
+      },
+      name: {
+        type: Sequelize.STRING
+      },
+      description: {
+        type: Sequelize.STRING
+      },
+      price: {
+        allowNull: false,
+        type: Sequelize.DECIMAL
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+      }
+    }, options, {});
+  },
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable("Spots", options);
+  }
 };
