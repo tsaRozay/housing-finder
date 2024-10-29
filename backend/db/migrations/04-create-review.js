@@ -1,68 +1,58 @@
+// migration reviews
 'use strict';
 
 let options = {};
-if (process.env.NODE_ENV === "production") {
-    options.schema = process.env.SCHEMA;
-    options.tableName = 'Reviews'
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-    async up(queryInterface, Sequelize) {
-        await queryInterface.createTable(
-            options,
-            {
-                id: {
-                    allowNull: false,
-                    autoIncrement: true,
-                    primaryKey: true,
-                    type: Sequelize.INTEGER,
-                },
-                spotId: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    references: {
-                        model: 'Spots', 
-                        key: 'id'
-                    },
-                    onDelete: 'CASCADE'
-                },
-                userId: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    references: {
-                        model: 'Users',
-                        key: 'id'
-                    },
-                    onDelete: 'CASCADE'
-                },
-                review: {
-                    type: Sequelize.STRING(255),
-                    allowNull: false,
-                },
-                stars: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    validate: {
-                        min: 1,
-                        max: 5
-                    }
-                },
-                createdAt: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-                },
-                updatedAt: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-                },
-            },
-            options
-        );
-    },
-
-    async down(queryInterface, Sequelize) {
-        return queryInterface.dropTable("Reviews", options);
-    },
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("Reviews", {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      spotId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Spots",
+          key: "id",
+        },
+      },
+      userId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+      },
+      review: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      stars: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      createdAt: {
+        allowNull: false,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        type: Sequelize.DATE
+      }
+    }, options, {});
+  },
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable("Reviews", options);
+  }
 };
