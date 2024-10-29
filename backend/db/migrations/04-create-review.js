@@ -1,4 +1,3 @@
-// migration reviews
 'use strict';
 
 let options = {};
