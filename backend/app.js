@@ -10,7 +10,7 @@ const { environment } = require("./config");
 const isProduction = environment === "production";
 const { ValidationError } = require("sequelize");
 
-require("dotenv").config();
+// require("dotenv").config();
 
 const app = express();
 

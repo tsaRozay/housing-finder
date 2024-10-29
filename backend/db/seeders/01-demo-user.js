@@ -1,8 +1,9 @@
 "use strict";
-
-const { User } = require("../models");
+console.log('lol')
+const { User } = require('../models');
+console.log(User)
 const bcrypt = require("bcryptjs");
-
+console.log(bcrypt)
 module.exports = {
     async up(queryInterface, Sequelize) {
         let options = {};
@@ -21,8 +22,8 @@ module.exports = {
                         firstName: "Demo",
                         lastName: "User",
                         // profilePic: 'https://example.com/demo-pic.jpg', // Add a placeholder profile pic
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
+                        // createdAt: new Date(),
+                        // updatedAt: new Date(),
                     },
                     {
                         email: "user1@user.io",
@@ -31,8 +32,8 @@ module.exports = {
                         firstName: "Fake",
                         lastName: "User1",
                         // profilePic: 'https://example.com/fakeuser1-pic.jpg',
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
+                        // createdAt: new Date(),
+                        // updatedAt: new Date(),
                     },
                     {
                         email: "user2@user.io",
@@ -41,8 +42,8 @@ module.exports = {
                         firstName: "Fake",
                         lastName: "User2",
                         // profilePic: 'https://example.com/fakeuser2-pic.jpg',
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
+                        // createdAt: new Date(),
+                        // updatedAt: new Date(),
                     },
                     {
                         email: "goku@dbz.io",
@@ -51,8 +52,8 @@ module.exports = {
                         firstName: "Son",
                         lastName: "Goku",
                         // profilePic: 'https://example.com/goku-pic.jpg',
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
+                        // createdAt: new Date(),
+                        // updatedAt: new Date(),
                     },
                     {
                         email: "vegeta@dbz.io",
@@ -61,8 +62,8 @@ module.exports = {
                         firstName: "Vegeta",
                         lastName: "Saiyan",
                         // profilePic: 'https://example.com/vegeta-pic.jpg',
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
+                        // createdAt: new Date(),
+                        // updatedAt: new Date(),
                     },
                 ],
                 { validate: true, ...options }
