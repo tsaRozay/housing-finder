@@ -1,32 +1,36 @@
-//Model SpotImage
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class SpotImage extends Model {
-    static associate(models) {
-      // define association here
-      SpotImage.belongsTo(models.Spot, { foreignKey: 'spotId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+    class SpotImage extends Model {
+        /**
+         * Helper method for defining associations.
+         * This method is not a part of Sequelize lifecycle.
+         * The `models/index` file will call this method automatically.
+         */
+        static associate(models) {
+            // define association here
+            SpotImage.belongsTo(models.Spot, {
+                foreignKey: "spotId",
+                as: "SpotImages",
+            });
+        }
     }
-  }
-  SpotImage.init({
-    spotId: {
-      allowNull: false,
-      type: DataTypes.INTEGER,
-    },
-    url: {
-      allowNull: false,
-      unique: true,
-      type: DataTypes.STRING,
-    },
-    preview: {
-      defaultValue: false,
-      type: DataTypes.BOOLEAN,
-    }
-  }, {
-    sequelize,
-    modelName: 'SpotImage',
-  });
-  return SpotImage;
+    SpotImage.init(
+        {
+            spotId: DataTypes.INTEGER,
+            url: {
+                allowNull: false,
+                type: DataTypes.STRING,
+                validate: {
+                    isUrl: true,
+                },
+            },
+            preview: DataTypes.BOOLEAN,
+        },
+        {
+            sequelize,
+            modelName: "SpotImage",
+        }
+    );
+    return SpotImage;
 };

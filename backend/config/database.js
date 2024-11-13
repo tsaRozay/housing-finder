@@ -1,9 +1,19 @@
+// backend/config/database.js
 const config = require('./index');
 
 module.exports = {
   development: {
     storage: config.dbFile,
-    dialect: "sqlite",
+    ...(process.env.USE_LOCAL_POSTGRESS === 'true' ? {
+      use_env_variable: 'DATABASE_URL',
+      dialect: 'postgres',
+      dialectOptions: {},
+      define: {
+        schema: 'public',
+      }
+    } : {
+      dialect: "sqlite",
+    }),
     seederStorage: "sequelize",
     logQueryParameters: true,
     typeValidation: true
