@@ -1,97 +1,31 @@
 // backend/routes/api/index.js
-const router = require('express').Router();
-const { setTokenCookie, requireAuth } = require('../../utils/auth.js');
-const { User, Spot, Review, SpotImage, ReviewImage } = require('../../db/models');
-const sessionRouter = require('./session.js');
-const usersRouter = require('./users.js');
-const spotsRouter = require('./spots.js');
-const reviewRouter = require('./reviews.js');
+const router = require("express").Router();
+const sessionRouter = require("./session.js");
+const usersRouter = require("./users.js");
+const reviewsRouter = require("./reviews.js");
+const spotsRouter = require("./spot.js");
+const spotImageRouter = require("./spotimages.js");
+const reviewImageRouter = require("./reviewimages.js");
 
+const { restoreUser } = require("../../utils/auth.js");
 
-// GET /api/restore-user
-const { restoreUser } = require('../../utils/auth.js');
-const spotimage = require('../../db/models/spotimage.js');
-const { where } = require('sequelize');
+// Connect restoreUser middleware to the API router
+// If current user session is valid, set req.user to the user in the database
+// If current user session is not valid, set req.user to null
 router.use(restoreUser);
 
-router.get(
-  '/restore-user',
-  (req, res) => {
-    return res.json(req.user);
-  }
-);
+router.use("/session", sessionRouter);
 
-// GET /api/require-auth
+router.use("/users", usersRouter);
+router.use("/reviews", reviewsRouter);
 
-router.get(
-  '/require-auth',
-  requireAuth,
-  (req, res) => {
-    return res.json(req.user);
-  }
-);
+router.use("/spots", spotsRouter);
 
-//Delete a Spot Image
-router.delete('/spot-images/:imageId', requireAuth, async (req, res) => {
-  const { imageId } = req.params;
-  const userId = req.user.id;
+router.use("/spot-images", spotImageRouter);
+router.use("/review-images", reviewImageRouter);
 
-  const image = await SpotImage.findByPk(imageId, {
-    include: {
-      model: Spot,
-      attributes: ['ownerId']
-    }
-  });
-
-  if (!image) {
-    return res.status(404).json({ message: "Spot Image couldn't be found" });
-  };
-
-  if (image.Spot.ownerId !== userId) {
-    return res.status(403).json({ message: "Forbidden" });
-  }
-
-  await image.destroy();
-  return res.status(200).json({
-    "message": "Successfully deleted"
-  })
-})
-
-//Delete a Review Image
-router.delete('/review-images/:imageId', requireAuth, async (req, res) => {
-  const { imageId } = req.params;
-  const userId = req.user.id;
-
-  const image =  await ReviewImage.findOne({ 
-    where: { id: imageId },
-    include: { 
-      model: Review,
-      attributes: ['userId']
-    }
-  });
-
-  if (!image) {
-    return res.status(404).json({ message: "Review Image couldn't be found" });
-  };
-
-  if (image.Review.userId !== userId) {
-    return res.status(403).json({ message: "Forbidden" });
-  }
-
-  await image.destroy();
-  return res.status(200).json({
-    "message": "Successfully deleted"
-  })
-})
-
-router.use('/session', sessionRouter);
-router.use('/users', usersRouter);
-router.use('/spots', spotsRouter);
-router.use('/reviews', reviewRouter);
-
-router.post('/test', function (req, res) {
-  res.json({ requestBody: req.body });
+router.post("/test", (req, res) => {
+    res.json({ requestBody: req.body });
 });
-
 
 module.exports = router;
