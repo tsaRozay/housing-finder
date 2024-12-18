@@ -190,7 +190,7 @@ router.get("/", async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
-// Route: Get all Spgots owned by the Current User
+// Route: Get all Spots owned by the Current User
 // Method: GET
 // Path: /api/spots/current
 // Description: Fetches all spots created by the current authenticated user.
