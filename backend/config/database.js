@@ -1,7 +1,7 @@
 // backend/config/database.js
 const config = require('./index');
 
-console.log('DATABASE_URL:', process.env.DATABASE_URL);
+console.log('Resolved DB File Path:', config.dbFile);
 
 
 module.exports = {
