@@ -48,6 +48,12 @@ const routes = require('./routes');
 
 app.use(routes); // Connect all the routes
 
+// Default root route
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to Housing Finder API!' });
+});
+
+
 
 // backend/app.js
 
