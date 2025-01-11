@@ -10,7 +10,7 @@ module.exports = {
     ...(process.env.USE_LOCAL_POSTGRESS === 'true' ? {
       use_env_variable: 'DATABASE_URL',
       dialect: 'postgres',
-      dialectOptions: {},
+      dialectOptions: {}, 
       define: {
         schema: 'public',
       }

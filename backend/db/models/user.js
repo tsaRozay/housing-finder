@@ -69,6 +69,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             sequelize,
             modelName: "User",
+            tableName: "User",
             defaultScope: {
                 attributes: {
                     exclude: [
