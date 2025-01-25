@@ -1,3 +1,4 @@
+// ^ backend/app.js
 const express = require('express');
 require('express-async-errors');
 const morgan = require('morgan');
@@ -5,36 +6,35 @@ const cors = require('cors');
 const csurf = require('csurf');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
+const routes = require('./routes');
+const { ValidationError } = require('sequelize');
 
 const { environment } = require('./config');
 const isProduction = environment === 'production';
 
-<<<<<<< HEAD
-// require("dotenv").config();
-=======
->>>>>>> b512db5898ade4cc4f1be1eefa11fdbba12c4b73
-
 const app = express();
 
 app.use(morgan('dev'));
+
 app.use(cookieParser());
 app.use(express.json());
 
 
-// Security Middleware
+
+//! Security Middleware
 if (!isProduction) {
-    // enable cors only in development
+    //! enable cors only in development
     app.use(cors());
   }
-  
-  // helmet helps set a variety of headers to better secure your app
+
+  //! helmet helps set a variety of headers to better secure your app
   app.use(
     helmet.crossOriginResourcePolicy({
       policy: "cross-origin"
     })
   );
-  
-  // Set the _csrf token and create req.csrfToken method
+
+  //! Set the _csrf token and create req.csrfToken method
   app.use(
     csurf({
       cookie: {
@@ -45,23 +45,10 @@ if (!isProduction) {
     })
   );
 
+//! Connect all the routes
+app.use(routes);
 
-// backend/app.js
-const routes = require('./routes');
-
-
-app.use(routes); // Connect all the routes
-
-// Default root route
-app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to Housing Finder API!' });
-});
-
-
-
-// backend/app.js
-
-// Catch unhandled requests and forward to error handler.
+//! Catch unhandled requests and forward to error handler.
 app.use((_req, _res, next) => {
   const err = new Error("The requested resource couldn't be found.");
   err.title = "Resource Not Found";
@@ -70,15 +57,9 @@ app.use((_req, _res, next) => {
   next(err);
 });
 
-// backend/app.js
-
-const { ValidationError } = require('sequelize');
-
-
-
-// Process sequelize errors
+//! Process sequelize errors
 app.use((err, _req, _res, next) => {
-  // check if error is a Sequelize error:
+  //! check if error is a Sequelize error:
   if (err instanceof ValidationError) {
     let errors = {};
     for (let error of err.errors) {
@@ -90,7 +71,7 @@ app.use((err, _req, _res, next) => {
   next(err);
 });
 
-// Error formatter
+//! Error formatter
 app.use((err, _req, res, _next) => {
   res.status(err.status || 500);
   console.error(err);
@@ -102,4 +83,6 @@ app.use((err, _req, res, _next) => {
   });
 });
 
-module.exports = app;
+
+
+  module.exports = app;

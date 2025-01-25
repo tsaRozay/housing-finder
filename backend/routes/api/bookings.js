@@ -1,7 +1,7 @@
 const express = require('express');
 const { Spot, Image, Booking } = require('../../db/models');
 const { requireAuth, checkOwnership } = require('../../utils/auth');
-const { formatDate, formatDateTime } = require('../api/utils/date-formatter');
+const { formatDate, formatDateTime } = require('./utils/date-formatter.js');
 const { validateBooking } = require('../../utils/validation');
 
 const router = express.Router();

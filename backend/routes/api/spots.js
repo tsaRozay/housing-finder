@@ -3,7 +3,7 @@ const express = require('express');
 const { Op, fn, col } = require('sequelize');
 const { Spot, Image, Review, User, Booking } = require('../../db/models');
 const { requireAuth, checkOwnership } = require('../../utils/auth');
-const { formatDate, formatDateTime } = require('../api/utils/date-formatter');
+const { formatDate, formatDateTime } = require('./utils/date-formatter.js');
 const { validateSpot, validateBooking, validateReview, checkBookingConflict } = require('../../utils/validation');
 
 const router = express.Router();
