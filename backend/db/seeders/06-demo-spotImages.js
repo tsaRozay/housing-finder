@@ -1,48 +1,39 @@
 "use strict";
 
+let options = {};
+if (process.env.NODE_ENV === "production") {
+    options.schema = process.env.SCHEMA; // Define schema in options object if in production
+}
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-    async up(queryInterface, Sequelize) {
-        await queryInterface.bulkInsert("SpotImages", [
-            {
-                spotId: 1,
-                imageUrl: "https://example.com/demo-pic.jpg",
-                preview: true,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            },
-            {
-                spotId: 2,
-                imageUrl: "https://example.com/demo-pic.jpg",
-                preview: true,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            },
-            {
-                spotId: 3,
-                imageUrl: "https://example.com/demo-pic.jpg",
-                preview: true,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            },
-            {
-                spotId: 4,
-                imageUrl: "https://example.com/demo-pic.jpg",
-                preview: true,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            },
-            {
-                spotId: 5,
-                imageUrl: "https://example.com/demo-pic.jpg",
-                preview: true,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            },
-        ]);
+    up: async (queryInterface, Sequelize) => {
+        options.tableName = "SpotImages";
+        return queryInterface.bulkInsert(
+            options,
+            [
+                {
+                    spotId: 1,
+                    url: "https://examplepicture.com/image1.jpg",
+                    preview: true,
+                },
+                {
+                    spotId: 1,
+                    url: "https://examplepicture.com/image2.jpg",
+                    preview: false,
+                },
+                {
+                    spotId: 2,
+                    url: "https://examplepicture.com/image3.jpg",
+                    preview: true,
+                },
+            ],
+            { validate: true } // Enable validation for data integrity
+        );
     },
 
-    async down(queryInterface, Sequelize) {
-        await queryInterface.bulkDelete("SpotImages", null, {});
+    down: async (queryInterface, Sequelize) => {
+        options.tableName = "SpotImages";
+        return queryInterface.bulkDelete(options, null, {}); // Use options to support schema if in production
     },
 };

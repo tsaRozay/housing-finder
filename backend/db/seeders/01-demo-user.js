@@ -1,17 +1,26 @@
 "use strict";
+<<<<<<< HEAD
 console.log('lol')
 const { User } = require('../models');
 console.log(User)
 const bcrypt = require("bcryptjs");
 console.log(bcrypt)
+=======
+
+const bcrypt = require("bcryptjs");
+
+let options = {};
+if (process.env.NODE_ENV === "production") {
+    options.schema = process.env.SCHEMA;
+}
+
+/** @type {import('sequelize-cli').Migration} */
+>>>>>>> b512db5898ade4cc4f1be1eefa11fdbba12c4b73
 module.exports = {
     async up(queryInterface, Sequelize) {
-        let options = {};
-        if (process.env.NODE_ENV === "production" && process.env.SCHEMA) {
-            options.schema = process.env.SCHEMA;
-        }
-        options.tableName = "Users";
+        options.tableName = "User";
 
+<<<<<<< HEAD
         try {
             await User.bulkCreate(
                 [
@@ -71,27 +80,52 @@ module.exports = {
         } catch (error) {
             console.error("Error seeding users:", error.message);
         }
+=======
+        await queryInterface.bulkInsert(
+            options,
+            [
+                {
+                    email: "demo@user.io",
+                    username: "Demo-lition",
+                    firstName: "Joey",
+                    lastName: "Donuts",
+                    hashedPassword: bcrypt.hashSync("password"),
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                },
+                {
+                    email: "user1@user.io",
+                    username: "FakeUser1",
+                    firstName: "Michael",
+                    lastName: "Flordan",
+                    hashedPassword: bcrypt.hashSync("password2"),
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                },
+                {
+                    email: "user2@user.io",
+                    username: "FakeUser2",
+                    firstName: "Timmy",
+                    lastName: "Turner",
+                    hashedPassword: bcrypt.hashSync("password3"),
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                },
+            ],
+            {}
+        );
+>>>>>>> b512db5898ade4cc4f1be1eefa11fdbba12c4b73
     },
 
     async down(queryInterface, Sequelize) {
-        let options = {};
-        if (process.env.NODE_ENV === "production" && process.env.SCHEMA) {
-            options.schema = process.env.SCHEMA;
-        }
-        options.tableName = "Users";
+        options.tableName = "User";
 
         const Op = Sequelize.Op;
         return queryInterface.bulkDelete(
-            options.tableName,
+            options,
             {
                 username: {
-                    [Op.in]: [
-                        "Demo-lition",
-                        "FakeUser1",
-                        "FakeUser2",
-                        "Goku",
-                        "Vegeta",
-                    ],
+                    [Op.in]: ["Demo-lition", "FakeUser1", "FakeUser2"],
                 },
             },
             {}

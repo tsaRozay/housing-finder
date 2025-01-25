@@ -1,14 +1,15 @@
-'use strict';
+"use strict";
 
 let options = {};
 if (process.env.NODE_ENV === "production") {
-    options.schema = process.env.SCHEMA;
+    options.schema = process.env.SCHEMA; // define your schema in options object
 }
-
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
+        options.tableName = "Spots";
         await queryInterface.createTable(
-            "Spots",
+            options.tableName,
             {
                 id: {
                     allowNull: false,
@@ -18,12 +19,8 @@ module.exports = {
                 },
                 ownerId: {
                     type: Sequelize.INTEGER,
+                    references: { model: "Users", key: "id" }, // Ensures ownerId links to Users table
                     allowNull: false,
-                    references: {
-                        model: 'Users', 
-                        key: 'id'
-                    },
-                    onDelete: 'CASCADE'
                 },
                 address: {
                     type: Sequelize.STRING,
@@ -42,24 +39,26 @@ module.exports = {
                     allowNull: false,
                 },
                 lat: {
-                    type: Sequelize.DECIMAL,
+                    type: Sequelize.FLOAT,
                     allowNull: false,
                 },
                 lng: {
-                    type: Sequelize.DECIMAL,
+                    type: Sequelize.FLOAT,
                     allowNull: false,
                 },
                 name: {
                     type: Sequelize.STRING,
                     allowNull: false,
+                    validate: { len: [0, 50] },
                 },
                 description: {
-                    type: Sequelize.STRING,
+                    type: Sequelize.TEXT,
                     allowNull: false,
                 },
                 price: {
                     type: Sequelize.DECIMAL,
                     allowNull: false,
+                    validate: { min: 0 },
                 },
                 createdAt: {
                     allowNull: false,
@@ -75,8 +74,8 @@ module.exports = {
             options
         );
     },
-
     async down(queryInterface, Sequelize) {
-        return queryInterface.dropTable("Spots", options);
+        options.tableName = "Spots";
+        await queryInterface.dropTable(options);
     },
 };
