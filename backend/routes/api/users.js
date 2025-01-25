@@ -1,96 +1,44 @@
-// Import required modules
+//^ backend/routes/api/users.js
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
-
-// Import utility functions and models
-const { setTokenCookie, requireAuth } = require('../../utils/auth');
+const { setTokenCookie } = require('../../utils/auth');
 const { User } = require('../../db/models');
-
-// Sequelize's `Op` is used for operators (like OR, AND, etc.) in queries
-// Although `Op` isn't used here, it's commonly imported in case complex queries are needed
-const { Op } = require('sequelize');
+const { validateSignup } = require('../../utils/validation');
 
 const router = express.Router();
 
-// Validation middleware for signup inputs
-const validateSignup = [
-    check('email')
-      .exists({ checkFalsy: true }) // Ensures email exists and isn't falsy
-      .isEmail()                    // Checks if it's a valid email format
-      .withMessage('Invalid email'),
-    check('username')
-      .exists({ checkFalsy: true })
-      .isLength({ min: 4 })         // Enforces a minimum length of 4 characters
-      .withMessage('Username is required'),
-    check('username')
-      .not()
-      .isEmail()                    // Ensures username is not an email format
-      .withMessage('Username cannot be an email.'),
-    check('firstName')
-      .exists({ checkFalsy: true }) // Ensures first name isn't empty
-      .withMessage('First Name is required'),
-    check('lastName')
-      .exists({ checkFalsy: true }) // Ensures last name isn't empty
-      .withMessage('Last Name is required'),
-    handleValidationErrors          // Catches and returns validation errors
-];
-
-// Sign up route
+//~ Sign up
 router.post(
-    '/',
-    validateSignup,  // Validation middleware to ensure input requirements are met
-    async (req, res) => {
-      const { email, password, username, firstName, lastName } = req.body;
+  '/',
+  validateSignup,
+  async (req, res) => {
+    const { firstName, lastName, email, password, username } = req.body;
+    const hashedPassword = bcrypt.hashSync(password);
 
-      // Check if email or username is already registered
-      const emailUser = await User.findOne({
-        where: { email } // Looks up a user by email
-      });
+    //^ error handeling for dupes
+    const dupeEmailCheck = await User.findOne({ where: { email: email }});
+    const dupeUsernameCheck = await User.findOne({ where: { username: username }});
+    const errors = {};
+    if (dupeEmailCheck) errors.email = 'User with that email already exists';
+    if (dupeUsernameCheck) errors.username = 'User with that usnername already exists'
+    if (Object.keys(errors). length > 0) return res.status(500).json({ message: 'User already exists', errors })
 
-      const usernameUser = await User.findOne({
-        where: { username } // Looks up a user by username
-      });
+    const user = await User.create({ firstName, lastName, email, username, hashedPassword });
 
-      // Prepare error messages if email or username is taken
-      const errors = {};
-      if (emailUser) {
-        errors.email = "User with that email already exists";
-      }
-      if (usernameUser) {
-        errors.username = 'User with that username already exists';
-      }
+    const safeUser = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      username: user.username,
+    };
 
-      // If either email or username exists, respond with an error
-      if (emailUser || usernameUser) {
-        return res.status(500).json({
-          message: 'User already exists',
-          errors
-        });
-      }
+    await setTokenCookie(res, safeUser);
 
-      // Hash the password and create a new user in the database
-      const hashedPassword = bcrypt.hashSync(password);
-      const user = await User.create({ email, username, hashedPassword, firstName, lastName });
-  
-      // Return only safe user details without the password hash
-      const safeUser = {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        username: user.username,
-      };
-  
-      // Set a token cookie for the newly registered user
-      await setTokenCookie(res, safeUser);
-  
-      // Respond with the created user object
-      return res.status(201).json({
-        user: safeUser
-      });
-    }
+    return res.json({
+      user: safeUser
+    });
+  }
 );
 
 module.exports = router;

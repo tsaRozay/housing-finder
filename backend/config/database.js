@@ -1,22 +1,15 @@
-// backend/config/database.js
+//^ backend/config/database.js
+
+//! This will allow you to load the database configuration
+//! environment variables from the .env file into the config/index.js,
+//! as well as define the global schema for the project.
+
 const config = require('./index');
-
-console.log('Resolved DB File Path:', config.dbFile);
-
 
 module.exports = {
   development: {
     storage: config.dbFile,
-    ...(process.env.USE_LOCAL_POSTGRESS === 'true' ? {
-      use_env_variable: 'DATABASE_URL',
-      dialect: 'postgres',
-      dialectOptions: {}, 
-      define: {
-        schema: 'public',
-      }
-    } : {
-      dialect: "sqlite",
-    }),
+    dialect: "sqlite",
     seederStorage: "sequelize",
     logQueryParameters: true,
     typeValidation: true
