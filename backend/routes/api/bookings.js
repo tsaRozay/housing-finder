@@ -67,53 +67,6 @@ router.get('/current', requireAuth, async (req, res) => {
 router.put('/:bookingId', requireAuth, checkOwnership(Booking, 'bookingId', 'userId'),   // validateBooking,
 async (req, res) => {
   res.status(503).json({ message: 'This route is currently under construction.' });
-  // try {
-  //   //^ get curr date for checks
-  //   const currDate = formatDate(new Date());
-  //   const booking = await Booking.findByPk(req.params.bookingId);
-  //   if (!booking) return res.status(404).json({ message: `Booking couildn't be found` });
-
-  //   //^ Convert request body dates to Date objects
-  //   const reqStart = formatDate(req.body.startDate);
-  //   const reqEnd = formatDate(req.body.endDate)
-
-  //   //^ cant edit a booking in progress
-  //   if (reqStart <= currDate && reqEnd >= currDate) {
-  //     return res.status(403).json({ message: `Active bookings can't be modified`});
-  //   };
-
-  //   //^ cant edit past booking
-  //   if (reqEnd <= currDate) {
-  //     return res.status(403).json({ message: `Past bookings can't be modified`});
-  //   }
-
-  //   booking.set({
-  //       ...req.body
-  //   });
-
-  //   booking.save({ validate: true });
-
-  //   const responseData = booking.get();
-  //   responseData.startDate = formatDate(responseData.startDate);
-  //   responseData.endDate = formatDate(responseData.endDate);
-  //   responseData.createdAt = formatDateTime(responseData.createdAt);
-  //   responseData.updatedAt = formatDateTime(responseData.updatedAt);
-
-  //   const resRemodel = {
-  //       id: responseData.id,
-  //       spotId: responseData.spotId,
-  //       userId: responseData.userId,
-  //       startDate: responseData.startDate,
-  //       endDate: responseData.endDate,
-  //       createdAt: responseData.createdAt,
-  //       updatedAt: responseData.updatedAt
-  //   };
-
-  //   res.json(resRemodel);
-  // } catch (error) {
-  //     console.error('Error editing booking:', error);
-  //     return res.status(500).json({ error: 'Internal Server Error' });
-  // };
 });
 
 //~DELETE A BOOKING
