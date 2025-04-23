@@ -4,6 +4,7 @@ if (process.env.NODE_ENV === "production") {
     options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
+const { Spot } = require("../models");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -23,8 +24,6 @@ module.exports = {
                     name: "Newark Room",
                     description: "Wake up next to the traffic",
                     price: 200,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
                 },
                 {
                     ownerId: 2,
@@ -37,8 +36,6 @@ module.exports = {
                     name: "New York Home",
                     description: "Experience rats and luxury in the greatest city on Earth.",
                     price: 700,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
                 },
                 {
                     ownerId: 3,
@@ -51,8 +48,6 @@ module.exports = {
                     name: "LA Home",
                     description: "Ashton Kutcher stayed here a couple times",
                     price: 900,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
                 },
             ],
             { validate: true }

@@ -1,40 +1,43 @@
 "use strict";
+
 const { Model } = require("sequelize");
-const { Sequelize } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
     class Spot extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
         static associate(models) {
-            console.log('Available models:', Object.keys(models));
-            // define association here
+            Spot.hasMany(models.Review, {
+                foreignKey: "spotId",
+                onDelete: "CASCADE",
+                hooks: true,
+            });
             Spot.belongsTo(models.User, {
                 foreignKey: "ownerId",
                 as: "Owner",
             });
-            Spot.hasMany(models.Review, {
+            Spot.hasMany(models.Booking, {
                 foreignKey: "spotId",
-                as: "Reviews",
                 onDelete: "CASCADE",
+                hooks: true,
             });
             Spot.hasMany(models.SpotImage, {
                 foreignKey: "spotId",
-                as: "SpotImages",
                 onDelete: "CASCADE",
-            });
-            Spot.hasMany(models.Booking, {
-                foreignKey: "spotId",
-                as: "bookings",
-                onDelete: "CASCADE",
+                hooks: true,
             });
         }
     }
+
     Spot.init(
         {
-            ownerId: DataTypes.INTEGER,
+            ownerId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: "Users",
+                    key: "id",
+                    as: "Owner",
+                },
+            },
             address: {
                 type: DataTypes.STRING,
                 allowNull: false,
@@ -52,45 +55,52 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
             },
             lat: {
-                type: DataTypes.FLOAT,
-                allowNull: false,
+                type: DataTypes.DECIMAL,
+                allowNull: true,
+                validate: {
+                    min: -90,
+                    max: 90,
+                },
             },
             lng: {
-                type: DataTypes.FLOAT,
-                allowNull: false,
+                type: DataTypes.DECIMAL,
+                allowNull: true,
+                validate: {
+                    min: -180,
+                    max: 180,
+                },
             },
             name: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                validate: { len: [0, 50] },
+                validate: {
+                    len: [1, 49],
+                },
             },
             description: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT,
                 allowNull: false,
             },
             price: {
-                type: DataTypes.DECIMAL(11, 2),
+                type: DataTypes.DECIMAL,
                 allowNull: false,
+                validate: {
+                    min: 0,
+                },
+            },
+            createdAt: {
+                type: DataTypes.DATE,
+            },
+            updatedAt: {
+                type: DataTypes.DATE,
             },
         },
         {
             sequelize,
             modelName: "Spot",
-            scopes: {
-                addPreview: {
-                    attributes: {
-                        include: [
-                            Sequelize.literal(`(SELECT "url"
-                                FROM "SpotImages" AS image
-                                WHERE
-                                    image.preview = true
-                                LIMIT 1)`),
-                            "previewImage",
-                        ],
-                    },
-                },
-            },
+            tableName: "Spots",
         }
     );
+
     return Spot;
 };
