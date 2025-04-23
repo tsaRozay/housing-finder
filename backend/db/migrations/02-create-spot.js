@@ -2,14 +2,14 @@
 
 let options = {};
 if (process.env.NODE_ENV === "production") {
-    options.schema = process.env.SCHEMA; // define your schema in options object
+    options.schema = process.env.SCHEMA;
 }
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        options.tableName = "Spots";
         await queryInterface.createTable(
-            options.tableName,
+            "Spots",
             {
                 id: {
                     allowNull: false,
@@ -19,8 +19,13 @@ module.exports = {
                 },
                 ownerId: {
                     type: Sequelize.INTEGER,
-                    references: { model: "Users", key: "id" }, // Ensures ownerId links to Users table
                     allowNull: false,
+                    references: {
+                        model: "Users",
+                        key: "id",
+                        as: "Owner",
+                    },
+                    onDelete: "CASCADE",
                 },
                 address: {
                     type: Sequelize.STRING,
@@ -39,41 +44,40 @@ module.exports = {
                     allowNull: false,
                 },
                 lat: {
-                    type: Sequelize.FLOAT,
-                    allowNull: false,
+                    type: Sequelize.DECIMAL(10, 6),
+                    unique: false,
                 },
                 lng: {
-                    type: Sequelize.FLOAT,
-                    allowNull: false,
+                    type: Sequelize.DECIMAL(10, 6),
+                    unique: false,
                 },
                 name: {
                     type: Sequelize.STRING,
                     allowNull: false,
-                    validate: { len: [0, 50] },
                 },
                 description: {
                     type: Sequelize.TEXT,
                     allowNull: false,
                 },
                 price: {
-                    type: Sequelize.DECIMAL,
+                    type: Sequelize.DECIMAL(6, 2),
                     allowNull: false,
-                    validate: { min: 0 },
                 },
                 createdAt: {
-                    allowNull: false,
                     type: Sequelize.DATE,
+                    allowNull: false,
                     defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
                 },
                 updatedAt: {
-                    allowNull: false,
                     type: Sequelize.DATE,
+                    allowNull: false,
                     defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
                 },
             },
             options
         );
     },
+
     async down(queryInterface, Sequelize) {
         options.tableName = "Spots";
         await queryInterface.dropTable(options);

@@ -1,14 +1,10 @@
 "use strict";
+
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
     class Review extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
         static associate(models) {
-            // define association here
             Review.belongsTo(models.User, {
                 foreignKey: "userId",
             });
@@ -17,25 +13,53 @@ module.exports = (sequelize, DataTypes) => {
             });
             Review.hasMany(models.ReviewImage, {
                 foreignKey: "reviewId",
-                as: "ReviewImages",
             });
         }
     }
+
     Review.init(
         {
-            spotId: DataTypes.INTEGER,
-            userId: DataTypes.INTEGER,
-            review: DataTypes.STRING,
+            spotId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: "Spots",
+                    key: "id",
+                },
+            },
+            userId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: "Users",
+                    key: "id",
+                },
+            },
+            review: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
             stars: {
                 type: DataTypes.INTEGER,
-                allowNull: false
-            }
+                allowNull: false,
+                validate: {
+                    min: 1,
+                    max: 5,
+                },
+            },
+            createdAt: {
+                type: DataTypes.DATE,
+            },
+            updatedAt: {
+                type: DataTypes.DATE,
+            },
         },
         {
             sequelize,
             modelName: "Review",
-            tableName: "Reviews"
+            tableName: "Reviews",
         }
     );
+
     return Review;
 };
