@@ -1,0 +1,15 @@
+# pack-refs with: peeled fully-peeled sorted 
+4b2aecf5846a6533c8885e9056e44b7a31589e65 refs/heads/auth-setup
+bf31940156dc3ccdb2922a8c7919cabad0b77b37 refs/heads/dev
+cf453f9983c9d6d0a0f1196451e6e3f6b23e5b07 refs/heads/get-session
+6bec8d35b35c4791514b1a252020595eb269f7c7 refs/heads/login
+c3a3976fdc526e0430cbcf758424e84709277b59 refs/heads/logout
+61a5c01ee3f671725034e381232669810dd289a2 refs/heads/main
+785e6e0b6d1c1ac3592e2efc6ea77555cb5d073f refs/heads/signup
+ccd6a901cce67d3a582e08e32e25dccb40ebd65e refs/heads/validate-login-inputs
+cac4214375e35b466dc13c4fb9c0b791b3221a04 refs/heads/validate-signup-inputs
+092285b707e4b5be4a97a0b3cf3b2a0bea62d734 refs/pull/1/head
+4b2aecf5846a6533c8885e9056e44b7a31589e65 refs/pull/2/head
+785e6e0b6d1c1ac3592e2efc6ea77555cb5d073f refs/pull/3/head
+cf453f9983c9d6d0a0f1196451e6e3f6b23e5b07 refs/pull/4/head
+f564b2a4fda2df0904d86bade3ffb9c68f6d8e77 refs/pull/5/head
