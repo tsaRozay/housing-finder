@@ -1,8 +1,6 @@
-// backend/utils/validation.js
-const { validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
-// middleware for formatting errors from express-validator middleware
-// (to customize, see express-validator's documentation)
+// Middleware for formatting errors from express-validator middleware
 const handleValidationErrors = (req, _res, next) => {
   const validationErrors = validationResult(req);
 
@@ -21,6 +19,19 @@ const handleValidationErrors = (req, _res, next) => {
   next();
 };
 
+// Define reviewValidation middleware
+const reviewValidation = [
+  check("review")
+    .notEmpty()
+    .withMessage("Review cannot be empty.")
+    .isLength({ max: 255 })
+    .withMessage("Review cannot be longer than 255 characters."),
+  check("stars")
+    .isInt({ min: 1, max: 5 })
+    .withMessage("Stars must be an integer between 1 and 5."),
+];
+
 module.exports = {
-  handleValidationErrors
+  handleValidationErrors,
+  reviewValidation,  // Export the reviewValidation array here
 };
