@@ -1,8 +1,16 @@
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import { thunk } from 'redux-thunk';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import sessionReducer from './session';
 
 
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+   session: sessionReducer
+});
+
+const store = configureStore({
+    reducer: rootReducer
+});
   
 
   let enhancer;
@@ -19,4 +27,4 @@ const rootReducer = combineReducers({});
       return createStore(rootReducer, preloadedState, enhancer);
   };
   
-  export default configureStore;
+  export default store;
