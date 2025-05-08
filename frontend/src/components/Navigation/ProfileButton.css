@@ -1,0 +1,5 @@
+ /* Hide when menu is not active */
+ .hidden {
+    display: none;
+  }
+  
