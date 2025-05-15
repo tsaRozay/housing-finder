@@ -1,0 +1,90 @@
+.create-spot-container {
+    width: 450px;
+    margin: auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+label {
+    font-weight: 500;
+    display: block;
+    margin-top: 10px;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: 3px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+textarea {
+    height: 100px;
+    resize: none;
+    border: 2px solid black;
+}
+
+.create-spot-container input[name="country"],
+.create-spot-container input[name="address"],
+.create-spot-container input[name="city"],
+.create-spot-container input[name="state"] {
+    margin-bottom: 10px;
+}
+
+.create-spot-container input[name="price"] {
+    width: 100%;
+}
+
+.create-spot-container input:not([name="price"]) {
+    margin-bottom: 5px;
+}
+
+button {
+    display: flex;
+    background-color: #FF6F61;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+button:hover {
+    background-color: #f84d3e;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+@media (max-width: 500px) {
+    .create-spot-container {
+        width: 90%;
+        padding: 15px;
+    }
+}
