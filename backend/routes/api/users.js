@@ -44,14 +44,14 @@ router.post("/", validateSignup, async (req, res, next) => {
         where: { [Op.or]: [{ username }, { email }] },
     });
     if (existingUser) {
-        return next({
-            status: 500,
-            message: "User already exists",
-            errors: {
-                username: "User with that username already exists",
-                email: "User with that email already exists",
-            },
-        });
+        const err = new Error("User already exists");
+        err.status = 403;
+        err.title = "User already exists";
+        err.errors = {
+          email: "User with that email already exists",
+          username: "User with that username already exists",
+        };
+        return next(err);        
     }
 
     const user = await User.create({
