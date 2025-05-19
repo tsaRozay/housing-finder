@@ -14,17 +14,17 @@ module.exports = {
             [
                 {
                     spotId: 1,
-                    url: "https://examplepicture.com/image1.jpg",
+                    url: "https://images.pexels.com/photos/15067166/pexels-photo-15067166/free-photo-of-taxi-on-a-city-street.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                     preview: true,
                 },
                 {
                     spotId: 1,
-                    url: "https://examplepicture.com/image2.jpg",
+                    url: "https://images.pexels.com/photos/2224861/pexels-photo-2224861.png",
                     preview: false,
                 },
                 {
                     spotId: 2,
-                    url: "https://examplepicture.com/image3.jpg",
+                    url: "https://examplepicture.com/image3.jpghttps://images.pexels.com/photos/2695679/pexels-photo-2695679.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                     preview: true,
                 },
             ],

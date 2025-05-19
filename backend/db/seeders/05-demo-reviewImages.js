@@ -16,7 +16,7 @@ module.exports = {
             [
                 {
                     reviewId: 1,
-                    url: "www.examplepicture.com",
+                    url: "https://cdn-imgix.headout.com/tour/10974/TOUR-IMAGE/940303d2-f97e-4af4-aecd-e601a345e1a5-6013-new-york-twin-peaks-empire-state-building---top-of-the-rock-tickets-01.jpg?auto=format&w=1222.3999999999999&h=687.6&q=90&fit=crop&ar=16%3A9&crop=faces",
                 },
                 {
                     reviewId: 2,
