@@ -16,7 +16,7 @@ module.exports = {
         await User.bulkCreate(
             [
                 {
-                    email: "demo@user.io",
+                    email: "demo1@user.io",
                     username: "Demo-lition1",
                     firstName: "Billy",
                     lastName: "Bob",
