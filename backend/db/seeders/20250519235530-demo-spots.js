@@ -1,19 +1,19 @@
 "use strict";
+
 let options = {};
 if (process.env.NODE_ENV === "production") {
-    options.schema = process.env.SCHEMA; // define your schema in options object
+    options.schema = process.env.SCHEMA;
 }
-
-const { Spot } = require("../models");
+options.tableName = "Spots";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        options.tableName = "Spots";
-        await queryInterface.bulkInsert(
+        return queryInterface.bulkInsert(
             options,
             [
                 {
+                    id: 1,
                     ownerId: 1,
                     address: "333 Cherry Lane",
                     city: "Newark",
@@ -24,8 +24,11 @@ module.exports = {
                     name: "Newark Room",
                     description: "Wake up next to the traffic",
                     price: 200,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
                 },
                 {
+                    id: 2,
                     ownerId: 2,
                     address: "2200 Cherry Lane",
                     city: "New York",
@@ -36,8 +39,11 @@ module.exports = {
                     name: "New York Home",
                     description: "Experience rats and luxury in the greatest city on Earth.",
                     price: 700,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
                 },
                 {
+                    id: 3,
                     ownerId: 3,
                     address: "2900 Los Angeles Blvd",
                     city: "Los Angeles",
@@ -48,14 +54,22 @@ module.exports = {
                     name: "LA Home",
                     description: "Ashton Kutcher stayed here a couple times",
                     price: 900,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
                 },
             ],
-            { validate: true }
+            {}
         );
     },
 
     async down(queryInterface, Sequelize) {
-        options.tableName = "Spots"; //
-        await queryInterface.bulkDelete(options, null, {});
+        const Op = Sequelize.Op;
+        return queryInterface.bulkDelete(
+            options,
+            {
+                id: { [Op.in]: [1, 2, 3] },
+            },
+            {}
+        );
     },
 };
