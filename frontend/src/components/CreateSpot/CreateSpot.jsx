@@ -109,44 +109,65 @@ function CreateSpot() {
     <div className="create-spot-container">
       <h1>{isUpdate ? "Update Your Spot" : "Create a New Spot"}</h1>
       <form onSubmit={handleSubmit}>
-        <h2>Location Details</h2>
-        <label>Country<input name="country" value={spotData.country} onChange={handleChange} /></label>
-        {errors.country && <span className="error">{errors.country}</span>}
+      <h2>Where's your place located?</h2>
+      <p className="caption">Guests will only get your exact address once they booked a reservation.</p>
+      <label>Country<input name="country" value={spotData.country} onChange={handleChange} /></label>
+      {errors.country && <span className="error">{errors.country}</span>}
 
-        <label>Street Address<input name="address" value={spotData.address} onChange={handleChange} /></label>
-        {errors.address && <span className="error">{errors.address}</span>}
+      <label>Street Address<input name="address" value={spotData.address} onChange={handleChange} /></label>
+      {errors.address && <span className="error">{errors.address}</span>}
 
-        <label>City<input name="city" value={spotData.city} onChange={handleChange} /></label>
-        {errors.city && <span className="error">{errors.city}</span>}
+      <label>City<input name="city" value={spotData.city} onChange={handleChange} /></label>
+      {errors.city && <span className="error">{errors.city}</span>}
 
-        <label>State<input name="state" value={spotData.state} onChange={handleChange} /></label>
-        {errors.state && <span className="error">{errors.state}</span>}
+      <label>State<input name="state" value={spotData.state} onChange={handleChange} /></label>
+      {errors.state && <span className="error">{errors.state}</span>}
 
-        <h2>Tell Guests About Your Place</h2>
-        <label>Description<textarea name="description" value={spotData.description} onChange={handleChange} /></label>
-        {errors.description && <span className="error">{errors.description}</span>}
 
-        <h2>Give Your Spot a Catchy Name</h2>
-        <label>Name<input name="name" value={spotData.name} onChange={handleChange} /></label>
-        {errors.name && <span className="error">{errors.name}</span>}
+      <h2>Describe your place to guests</h2>
+      <p className="caption">
+      Mention the best features of your space, any special amenities like fast wifi or parking,
+      and what you love about the neighborhood.
+       </p>
+      <label>Description<textarea name="description" value={spotData.description} onChange={handleChange} /></label>
+      {errors.description && <span className="error">{errors.description}</span>}
 
-        <h2>Set Your Price</h2>
-        <label>Price<input name="price" type="number" min="1" value={spotData.price} onChange={handleChange} /></label>
-        {errors.price && <span className="error">{errors.price}</span>}
 
-        <h2>Showcase Your Spot with Photos</h2>
-        <label>Preview Image URL<input value={previewImage} onChange={(e) => setPreviewImage(e.target.value)} /></label>
-        {errors.previewImage && <span className="error">{errors.previewImage}</span>}
+      <h2>Create a title for your spot</h2>
+      <p className="caption">
+      Catch guests' attention with a spot title that highlights what makes your place special.
+      </p>
+      <label>Name<input name="name" value={spotData.name} onChange={handleChange} /></label>
+      {errors.name && <span className="error">{errors.name}</span>}
 
-        {otherImages.map((url, index) => (
-          <div key={index}>
-            <input placeholder="Image URL" value={url} onChange={(e) => handleImageChange(index, e.target.value)} />
-            {errors.otherImages && <span className="error">{errors.otherImages}</span>}
-          </div>
-        ))}
+
+      <h2>Set a base price for your spot</h2>
+      <p className="caption">
+      Competitive pricing can help your listing stand out and rank higher in search results.
+      </p>
+      <label>Price<input name="price" type="number" min="1" value={spotData.price} onChange={handleChange} /></label>
+      {errors.price && <span className="error">{errors.price}</span>}
+
+
+      <h2>Liven up your spot with photos</h2>
+      <p className="caption">
+      Submit a link to at least one photo to publish your spot.
+      </p>
+      <label>Preview Image URL<input value={previewImage} onChange={(e) => setPreviewImage(e.target.value)} /></label>
+      {errors.previewImage && <span className="error">{errors.previewImage}</span>}
+
+{otherImages.map((url, index) => (
+  <div key={index}>
+    <input placeholder="Image URL" value={url} onChange={(e) => handleImageChange(index, e.target.value)} />
+    {errors.otherImages && <span className="error">{errors.otherImages}</span>}
+  </div>
+))}
+
 
         <div className="button-container">
-        <button type="submit">{isUpdate ? "Update Listing" : "Create Spot"}</button>
+        <button type="submit" disabled={Object.keys(validateFields()).length > 0}>
+        {isUpdate ? "Update Listing" : "Create Spot"}
+        </button>
         </div>
       </form>
     </div>
