@@ -1,0 +1,189 @@
+.navigation-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 190px;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0 2rem;
+  }
+  
+  /* Left-aligned items (logo) */
+  .nav-left {
+    display: flex;
+    align-items: center;
+    padding-bottom: 110px ;
+  }
+  
+  /* Right-aligned items (profile button) */
+  .nav-right {
+    display: flex;
+    align-items: center;
+    padding-top: 0px;
+  }
+  
+  .nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-right: 110px;
+    gap: 1.5rem;
+  }
+  
+  /* Logo Styles */
+  .nav-home {
+    margin-right: auto;
+    /* Pushes everything else to the right */
+  }
+  
+  .nav-home .nav-link {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    height: 40px;
+  }
+  
+  .nav-logo {
+    height: 225px;
+    padding-top: 150px;
+    width: auto;
+    /* max-width: 150px; */
+    object-fit: contain;
+    transition: transform 0.2s ease;
+  }
+  /* Loadstate when logo is clicked */
+  .loading-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 1000;
+  }
+  
+  .loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .loading-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid #ff5a5f;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Profile Button Container */
+  .profile-container {
+    margin-left: auto;
+    /* Ensures it stays on the far right */
+  }
+  
+  /* Existing styles below (unchanged) */
+  .nav-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .nav-link:hover {
+    color: #4a90e2;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .nav-login-button,
+  .nav-signup-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .nav-login-button {
+    color: #333;
+  }
+  
+  .nav-login-button:hover {
+    color: #4a90e2;
+  }
+  
+  .nav-signup-button {
+    background-color: #4a90e2;
+    color: white;
+  }
+  
+  .nav-signup-button:hover {
+    background-color: #3a7bc8;
+  }
+  
+  .nav-home .nav-link.active {
+    background-color: transparent;
+    color: transparent;
+  }
+  
+  .nav-items-inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  /* Add these new styles */
+  .nav-create-spot {
+    margin-right: 15px;
+    padding-right: 30px;
+    padding-top: 15px;
+  }
+  
+  .create-spot-link {
+    padding: 8px 16px;
+    /* padding-right: 100px; */
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .create-spot-link:hover {
+    background-color: #f7f7f7;
+    text-decoration: none;
+  }
+  
+  
+  #root .create-spot-form {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }

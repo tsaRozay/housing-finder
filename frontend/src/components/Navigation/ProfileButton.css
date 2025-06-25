@@ -1,5 +1,99 @@
- /* Hide when menu is not active */
- .hidden {
-    display: none;
-  }
-  
+.profile-dropdown.hidden {
+  display: none;
+}
+
+.profile-container {
+  position: absolute;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-dropdown {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: lightblue;
+  right: 40px;
+  margin: 10px;
+  top: 70px;
+  width: 200px;
+  height: auto;
+  border: 1px solid black;
+  align-items: center;
+  gap: 2px;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.profile-dropdown li,
+.profile-dropdown li button {
+  max-width: 100%;
+  width: 100%;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.profile-dropdown li button {
+  border: none;
+}
+
+.profile-dropdown li button:hover {
+  background-color: rgb(239, 235, 235);
+}
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  border-radius: 30px;
+  background-color: transparent;
+  border: 1px solid rgb(199, 190, 190);
+}
+
+.profile-icon-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-icon {
+  height: 30px;
+  width: 30px;
+  padding: 0px;
+}
+
+.user-letter {
+  font-size: 30px;
+  height: 30px;
+  width: 30px;
+  padding: 5px;
+  color: blue;
+}
+
+.profile-hamburger {
+  height: 30px;
+  width: 30px;
+  padding: 5px;
+  color: grey;
+}
+
+.dropdown-auth-btn {
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+}
+
+.dropdown-auth-btn:hover {
+  background-color: #f7f7f7;
+}
+
+.dropdown-item {
+  padding: 4px 0;
+}
