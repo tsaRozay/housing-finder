@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 require('express-async-errors');
 const morgan = require('morgan');
@@ -47,6 +48,15 @@ const routes = require('./routes');
 
 
 app.use(routes); // Connect all the routes
+if (isProduction) {
+  // Serve the React build files
+  app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+  // Serve index.html for any unknown route (not starting with /api)
+  app.get(/^(?!\/api).*/, (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+  });
+}
 
 // Default root route
 // app.get('/', (req, res) => {
