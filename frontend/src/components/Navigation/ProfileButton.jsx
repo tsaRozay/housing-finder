@@ -22,26 +22,28 @@ function ProfileButton({ user }) {
 
   useEffect(() => {
     if (!showMenu) return;
-
+  
     const closeMenu = (e) => {
-      if (!ulRef.current.contains(e.target)) {
+      if (ulRef.current && !ulRef.current.contains(e.target)) {
         setShowMenu(false);
       }
     };
-
+  
     document.addEventListener('click', closeMenu);
-
+  
     return () => document.removeEventListener("click", closeMenu);
-  }, [showMenu]);
+  }, [showMenu]);  
 
   const closeMenu = () => setShowMenu(false);
 
   const logout = (e) => {
     e.preventDefault();
-    dispatch(sessionActions.logout());
-    closeMenu();
-    navigate('/') // Navigates to home page after logging out
+    dispatch(sessionActions.logout()).then(() => {
+      closeMenu();
+      navigate('/');
+    });
   };
+  
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 

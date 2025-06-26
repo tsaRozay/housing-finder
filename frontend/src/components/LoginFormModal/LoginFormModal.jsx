@@ -85,8 +85,8 @@ function LoginFormModal() {
           type="button"
           className="demo-user-button"
           onClick={() => {
-            setCredential("FakeUser1");
-            setPassword("password2");
+            setCredential("Demo-lition");
+            setPassword("password");
             setTimeout(() => {
               document.getElementById("login-form").requestSubmit();
             }, 0);
