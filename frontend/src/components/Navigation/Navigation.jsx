@@ -1,91 +1,35 @@
-// Navigation.jsx
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useState } from 'react';
 import ProfileButton from './ProfileButton';
-import OpenModalButton from '../OpenModalButton';
-import LoginFormModal from '../LoginFormModal';
-import SignupFormModal from '../SignupFormModal';
-import './Navigation.css';
+import { GiHouse } from "react-icons/gi";
+import "./Navigation.css";
 
 function Navigation({ isLoaded }) {
-  const sessionUser = useSelector((state) => state?.session?.user ?? null);
-  const navigate = useNavigate();
-  const [isRedirecting, setIsRedirecting] = useState(false);
-
-  const handleHomeRedirect = (e) => {
-    e.preventDefault();
-    setIsRedirecting(true);
-    const delay = 1000 + Math.random() * 2000;
-    setTimeout(() => {
-      navigate("/");
-      setIsRedirecting(false);
-    }, delay);
-  };
-
-  let sessionLinks;
-  if (sessionUser) {
-    sessionLinks = (
-      <>
-        <li>
-          <NavLink to="/spots/new" className="create-spot-link">
-            Create a New Spot
-          </NavLink>
-        </li>
-        <li>
-          <ProfileButton user={sessionUser} />
-        </li>
-      </>
-    );
-  } else {
-    sessionLinks = (
-      <>
-        <li>
-          <OpenModalButton
-            buttonText="Log In"
-            modalComponent={<LoginFormModal />}
-            buttonClass="nav-login-button"
-          />
-        </li>
-        <li>
-          <OpenModalButton
-            buttonText="Sign Up"
-            modalComponent={<SignupFormModal />}
-            buttonClass="nav-signup-button"
-          />
-        </li>
-      </>
-    );
-  }
-
-  if (isRedirecting) {
-    return (
-      <div className="loading-container">
-        <div className="loading-content">
-          <div className="loading-spinner"></div>
-          <h2>Redirecting to the Homepage...</h2>
-        </div>
-      </div>
-    );
-  }
+  const sessionUser = useSelector((state) => state.session.user);
 
   return (
-    <nav className="navigation-bar">
-      <div className="nav-left">
-        <ul className="nav-links">
-          <li className="nav-home">
-            <NavLink to="/" end onClick={handleHomeRedirect} className="nav-link">
-              <img src={logo} alt="Home" className="nav-logo" />
-            </NavLink>
-          </li>
-        </ul>
-      </div>
-      <div className="nav-right">
-        <ul className="nav-links">
-          {isLoaded && sessionLinks}
-        </ul>
-      </div>
-    </nav>
+    <div>
+      <nav className="navbar">
+        <div className="nav-left">
+          <NavLink to="/" className="home-logo">
+            <GiHouse size={35} color="#000000" />
+          </NavLink>
+          <NavLink to="/" className="title">Housing Finder</NavLink>
+        </div>
+        <div className="nav-right">
+          {sessionUser && (
+            <div className="new-spot-link">
+              <NavLink to="/api/spots" className="create-link">
+                Create a New Spot
+              </NavLink>
+            </div>
+          )}
+          <div className="profile-btn-wrapper">
+            {isLoaded && <ProfileButton user={sessionUser} />}
+          </div>
+        </div>
+      </nav>
+    </div>
   );
 }
 

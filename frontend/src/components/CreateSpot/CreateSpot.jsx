@@ -109,7 +109,7 @@ function CreateSpot() {
     <div className="create-spot-container">
       <h1>{isUpdate ? "Update Your Spot" : "Create a New Spot"}</h1>
       <form onSubmit={handleSubmit}>
-      <h2>Where's your place located?</h2>
+      <h2>Wheres your place located?</h2>
       <p className="caption">Guests will only get your exact address once they booked a reservation.</p>
       <label>Country<input name="country" value={spotData.country} onChange={handleChange} /></label>
       {errors.country && <span className="error">{errors.country}</span>}
@@ -135,7 +135,7 @@ function CreateSpot() {
 
       <h2>Create a title for your spot</h2>
       <p className="caption">
-      Catch guests' attention with a spot title that highlights what makes your place special.
+      Catch guests&#39 attention with a spot title that highlights what makes your place special.
       </p>
       <label>Name<input name="name" value={spotData.name} onChange={handleChange} /></label>
       {errors.name && <span className="error">{errors.name}</span>}
