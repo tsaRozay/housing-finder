@@ -1,0 +1,82 @@
+.sign-up-container {
+    width: 500px;
+    min-height: 550px;
+    border: 2px solid black;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 0px 25px 0px 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    z-index: 1001;
+}
+
+.sign-up-container h1 {
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+}
+
+.form-div {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+input {
+    height: 35px;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: black;
+    outline: none;
+}
+
+.sign-up-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 55px;
+    width: 100%;
+    background-color: #FF6F61;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.sign-up-button:hover {
+    background-color: #f84d3e;
+}
+
+.sign-up-button:disabled {
+    background-color: #D3D3D3;
+    color: #A9A9A9;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: left;
+}
+
+input::placeholder {
+    font-size: 16px;
+    color: #aaa;
+}

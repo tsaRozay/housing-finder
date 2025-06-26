@@ -1,70 +1,112 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f8;
-    margin: 0;
-    padding: 0;
-  }
-  
-  h1 {
-    text-align: center;
-    color: #333;
-    margin-top: 40px;
-  }
-  
-  form {
-    max-width: 400px;
-    margin: 30px auto;
-    padding: 30px 40px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 15px;
-    color: #333;
-    font-weight: 500;
-  }
-  
-  input[type="text"],
-  input[type="password"] {
-    width: 100%;
-    padding: 10px 12px;
-    margin-top: 6px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    box-sizing: border-box;
-    transition: border 0.3s;
-  }
-  
-  input[type="text"]:focus,
-  input[type="password"]:focus {
-    border-color: #0077ff;
-    outline: none;
-  }
-  
-  button[type="submit"] {
-    width: 100%;
-    padding: 12px;
-    background-color: #0077ff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  button[type="submit"]:hover {
-    background-color: #005fd1;
-  }
-  
-  p {
-    color: #e63946;
-    font-size: 0.9rem;
-    margin-top: -10px;
-    margin-bottom: 10px;
-  }
+.login-modal-container {
+  border: 2px solid black;
+  border-radius: 12px;
+  width: 350px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  text-align: center;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.error-container {
+  color: #d9534f;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.login-modal-container input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.login-modal-container input:focus {
+  border-color: black;
+  outline: none;
+}
+
+.login-button,
+.demo-user-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: #ff6f61;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.login-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.login-button:hover {
+  background-color: #f84d3e;
+}
+
+.demo-user-div {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.demo-user-button {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: white;
+  color: #ff6f61;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  text-decoration: underline;
+}
+
+.demo-user-button:hover {
+  color: grey;
+}
+
+#login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.email,
+.password {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.log-in-button-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.demo-user-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

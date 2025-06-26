@@ -1,46 +1,60 @@
-/* DeleteSpotModal styles */
-.delete-spot-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.delete-spot-modal-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.delete-spot-modal-message {
-  font-size: 1rem;
-  color: #555;
-  margin-bottom: 20px;
-}
-
-.delete-spot-modal-buttons {
+.delete-modal {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 400px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.delete-spot-modal-button {
-  padding: 8px 16px;
+.h4-container {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #555;
+  width: 90%;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.yes, .no {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 40px;
+  width: 90%;
   border: none;
-  border-radius: 3px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.delete-spot-modal-button-yes {
-  background-color: red;
+.yes {
+  background-color: #FF6F61;
   color: white;
 }
 
-.delete-spot-modal-button-no {
-  background-color: #333;
+.yes:hover {
+  background-color: #f84d3e;
+}
+
+.no {
+  background-color: darkgray;
   color: white;
+}
+
+.no:hover {
+  background-color: grey;
 }

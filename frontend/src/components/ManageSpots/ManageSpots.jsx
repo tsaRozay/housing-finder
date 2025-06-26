@@ -72,10 +72,8 @@ function ManageSpotsModal() {
                                 {/* Delete button for spots */}
                                 <OpenModalButton
                                     buttonText="Delete"
+                                    modalComponent={<DeleteSpotModal spot={listing} />}
                                     className="delete-modal"
-                                    modalComponent={({ closeModal }) => (
-                                    <DeleteSpotModal spot={listing} closeModal={closeModal} />
-                                )}
                                 />
                             </div>
                         </div>

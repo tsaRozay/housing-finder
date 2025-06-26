@@ -1,30 +1,22 @@
-import { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { FaUserCircle } from "react-icons/fa";
-import * as sessionActions from "../../store/session";
-import OpenModalMenuItem from "./OpenModalMenuItem";
-import LoginFormModal from "../LoginFormModal";
-import SignupFormModal from "../SignupFormModal";
-import { NavLink } from "react-router-dom";
-import "./ProfileButton.css";
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { FaUserCircle } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import * as sessionActions from '../../store/session';
+import OpenModalMenuItem from './OpenModalMenuItem';
+import LoginFormModal from '../LoginFormModal';
+import SignupFormModal from '../SignupFormModal';
+import { HiBars3 } from "react-icons/hi2";
+import './ProfileButton.css'
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
-  const [userInitial, setUserInitial] = useState(null);
   const ulRef = useRef();
 
-  useEffect(() => {
-    if (user?.firstName) {
-      const initial = user.firstName.charAt(0).toUpperCase();
-      setUserInitial(initial);
-    } else {
-      setUserInitial(null);
-    }
-  }, [user]);
-
   const toggleMenu = (e) => {
-    e.stopPropagation();
+    e.stopPropagation(); // Keep from bubbling up to document and triggering closeMenu
     setShowMenu(!showMenu);
   };
 
@@ -32,12 +24,13 @@ function ProfileButton({ user }) {
     if (!showMenu) return;
 
     const closeMenu = (e) => {
-      if (ulRef.current && !ulRef.current.contains(e.target)) {
+      if (!ulRef.current.contains(e.target)) {
         setShowMenu(false);
       }
     };
 
-    document.addEventListener("click", closeMenu);
+    document.addEventListener('click', closeMenu);
+
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
 
@@ -47,67 +40,65 @@ function ProfileButton({ user }) {
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
+    navigate('/') // Navigates to home page after logging out
   };
 
-  const ulClassName = `profile-dropdown ${showMenu ? "" : "hidden"}`;
+  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
-    <div className="profile-container">
-      <button onClick={toggleMenu} className="profile-btn" aria-label="User menu">
-        <div className="profile-icon-container">
-          {userInitial ? (
-            <div className="user-letter">{userInitial}</div>
-          ) : (
-            <FaUserCircle className="user-icon" />
-          )}
+    <>
+      <button onClick={toggleMenu} className='profile-button'>
+        <div className='menu'>
+          <HiBars3 size={30} />
+        </div>
+        <div className='user'>
+          <FaUserCircle size={30}/>
         </div>
       </button>
 
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li className="dropdown-item user-info">
-              <div>Hello, {user.firstName || "User"}</div>
-              {user.email && <div className="user-email">{user.email}</div>}
-            </li>
-            <li className="dropdown-item">
-              <NavLink to="/spots/current" className="manage-spots-link" onClick={closeMenu}>
+          <div className="options">
+            <div>Hello, {user.firstName}</div>
+            <div>{user.email}</div>
+          </div>
+          <hr />
+          <div className="manage-div">
+            <div>
+              <Link to="/api/spots/current" className="manage-link">
                 Manage Spots
-              </NavLink>
-            </li>
-            <li className="dropdown-item">
-              <NavLink to="/api/reviews/current" className="manage-reviews-link" onClick={closeMenu}>
+              </Link>
+            </div>
+            <div>
+              <Link to="/api/reviews/current" className="manage-link">
                 Manage Reviews
-              </NavLink>
-            </li>
-            <li className="dropdown-item">
-              <button onClick={logout} className="logout-btn">
-                Log Out
-              </button>
-            </li>
-          </>
+              </Link>
+            </div>
+          </div>
+          <hr />
+          <div className="logout-button-div">
+            <button className="logout-button" onClick={logout}>
+              Log Out
+            </button>
+          </div>
+        </>
         ) : (
           <>
-            <li className="dropdown-item">
-              <OpenModalMenuItem
-                itemText="Log In"
-                modalComponent={<LoginFormModal />}
-                onItemClick={closeMenu}
-                buttonClass="dropdown-auth-btn"
-              />
-            </li>
-            <li className="dropdown-item">
-              <OpenModalMenuItem
-                itemText="Sign Up"
-                modalComponent={<SignupFormModal />}
-                onItemClick={closeMenu}
-                buttonClass="dropdown-auth-btn"
-              />
-            </li>
+            <OpenModalMenuItem
+              itemText="Log In"
+              onItemClick={closeMenu}
+              modalComponent={<LoginFormModal />}
+            />
+            <OpenModalMenuItem
+              itemText="Sign Up"
+              onItemClick={closeMenu}
+              modalComponent={<SignupFormModal />}
+            />
           </>
         )}
       </ul>
-    </div>
+    </>
   );
 }
 

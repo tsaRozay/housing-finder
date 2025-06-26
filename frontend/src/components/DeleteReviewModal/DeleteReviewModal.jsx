@@ -1,5 +1,5 @@
 import "./DeleteReviewModal.css";
-import { useModal } from "../../context/modal";
+import { useModal } from "../../context/Modal";
 import { useDispatch } from "react-redux";
 import { removeReview, fetchReviewsForSpot } from "../../store/reviews";
 import { fetchSpotDetails } from "../../store/spots";

@@ -92,6 +92,7 @@ const validateQueryParams = (req, res, next) => {
     next();
 };
 
+// Helper function to calculate average star rating
 const calculateAvgStarRating = async (spotId) => {
     const reviews = await Review.findAll({ where: { spotId } });
     const totalStars = reviews.reduce((sum, review) => sum + review.stars, 0);
@@ -100,6 +101,7 @@ const calculateAvgStarRating = async (spotId) => {
         : 0;
 };
 
+// Helper function to retrieve preview image URL
 const getPreviewImage = async (spotId) => {
     const image = await SpotImage.findOne({ where: { spotId } });
     return image ? image.url : "No preview image available";
@@ -118,6 +120,7 @@ const enrichSpotDetails = (spot) => {
     };
 };
 
+// Helper function to format date to "YYYY-MM-DD HH:mm:ss"
 const formatDateTime = (date) => {
     const pad = (num) => (num < 10 ? `0${num}` : num);
     const year = date.getFullYear();
@@ -129,7 +132,7 @@ const formatDateTime = (date) => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
-// Get all spots with optional filters
+// Add Query Filters to Get All Spots
 router.get("/", validateQueryParams, async (req, res) => {
     let {
         page = 1,
@@ -141,14 +144,16 @@ router.get("/", validateQueryParams, async (req, res) => {
         minPrice,
         maxPrice,
     } = req.query;
-
     const filters = {};
-    if (minLat) filters.lat = { ...filters.lat, [Op.gte]: minLat };
-    if (maxLat) filters.lat = { ...filters.lat, [Op.lte]: maxLat };
-    if (minLng) filters.lng = { ...filters.lng, [Op.gte]: minLng };
-    if (maxLng) filters.lng = { ...filters.lng, [Op.lte]: maxLng };
-    if (minPrice) filters.price = { ...filters.price, [Op.gte]: minPrice };
-    if (maxPrice) filters.price = { ...filters.price, [Op.lte]: maxPrice };
+
+    if (minLat) filters.lat = { ...filters.lat, [Op.gte]: parseFloat(minLat) };
+    if (maxLat) filters.lat = { ...filters.lat, [Op.lte]: parseFloat(maxLat) };
+    if (minLng) filters.lng = { ...filters.lng, [Op.gte]: parseFloat(minLng) };
+    if (maxLng) filters.lng = { ...filters.lng, [Op.lte]: parseFloat(maxLng) };
+    if (minPrice)
+        filters.price = { ...filters.price, [Op.gte]: parseFloat(minPrice) };
+    if (maxPrice)
+        filters.price = { ...filters.price, [Op.lte]: parseFloat(maxPrice) };
 
     const spots = await Spot.findAll({
         where: filters,
@@ -172,42 +177,34 @@ router.get("/", validateQueryParams, async (req, res) => {
     });
 
     const spotsWithDetails = await Promise.all(
-        spots.map(async (spot) => {
-            const spotData = spot.toJSON();
-            return {
-                ...spotData,
-                id: Number(spotData.id),
-                avgRating: await calculateAvgStarRating(spot.id),
-                previewImage: await getPreviewImage(spot.id),
-                createdAt: formatDateTime(new Date(spot.createdAt)),
-                updatedAt: formatDateTime(new Date(spot.updatedAt)),
-            };
-        })
+        spots.map(async (spot) => ({
+            ...spot.toJSON(),
+            avgRating: await calculateAvgStarRating(spot.id),
+            previewImage: await getPreviewImage(spot.id),
+            createdAt: formatDateTime(new Date(spot.createdAt)),
+            updatedAt: formatDateTime(new Date(spot.updatedAt)),
+        }))
     );
 
     return res.status(200).json({ Spots: spotsWithDetails, page, size });
 });
 
-// Get all Spots owned by current user
+// Get all Spots owned by the Current User
 router.get("/current", requireAuth, async (req, res) => {
     const spots = await Spot.findAll({ where: { ownerId: req.user.id } });
     const Spots = await Promise.all(
-        spots.map(async (spot) => {
-            const spotData = spot.toJSON();
-            return {
-                ...spotData,
-                id: Number(spotData.id),
-                avgRating: await calculateAvgStarRating(spot.id),
-                previewImage: await getPreviewImage(spot.id),
-                createdAt: formatDateTime(new Date(spot.createdAt)),
-                updatedAt: formatDateTime(new Date(spot.updatedAt)),
-            };
-        })
+        spots.map(async (spot) => ({
+            ...spot.toJSON(),
+            avgRating: await calculateAvgStarRating(spot.id),
+            previewImage: await getPreviewImage(spot.id),
+            createdAt: formatDateTime(new Date(spot.createdAt)),
+            updatedAt: formatDateTime(new Date(spot.updatedAt)),
+        }))
     );
     res.json({ Spots });
 });
 
-// Get a spot by id
+// Get details of a Spot from an id
 router.get("/:spotId", async (req, res) => {
     const spot = await Spot.findByPk(req.params.spotId, {
         include: [
@@ -226,7 +223,6 @@ router.get("/:spotId", async (req, res) => {
     }
 
     const spotDetails = enrichSpotDetails(spot.toJSON());
-    spotDetails.id = Number(spotDetails.id);
     spotDetails.createdAt = formatDateTime(new Date(spotDetails.createdAt));
     spotDetails.updatedAt = formatDateTime(new Date(spotDetails.updatedAt));
     res.json(spotDetails);

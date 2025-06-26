@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { modifyReview, fetchUserReviews, fetchReviewsForSpot } from "../../store/reviews";
 import { fetchSpotDetails } from '../../store/spots';
-import { useModal } from "../../context/modal";
+import { useModal } from "../../context/Modal";
 
 function UpdateReviewModal({ existingReview, existingStars, reviewId, spotId, currentPage }) {
     const dispatch = useDispatch();

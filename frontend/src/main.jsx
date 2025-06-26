@@ -6,7 +6,7 @@ import {Provider} from 'react-redux';
 import configureStore from './store';
 import { restoreCSRF, csrfFetch } from './store/csrf';
 import * as sessionActions from './store/session';
-import { ModalProvider, Modal } from './context/modal.jsx';
+import { ModalProvider, Modal } from './context/Modal.jsx';
 import * as spotActions from './store/spots'
 
 const store = configureStore();

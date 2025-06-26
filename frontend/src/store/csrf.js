@@ -1,32 +1,32 @@
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
-//set csrf cookie to HTTP request for any verb w/o GET in it. 
 export async function csrfFetch(url, options = {}) {
-    
-    //if there is not method, set it to GET
-    options.method = options.method || 'GET';
-
-    //if there is not header, set empty object
+    // set options.method to 'GET' if there is no method
+    options.method = options.method || "GET";
+    // set options.headers to an empty object if there is no headers
     options.headers = options.headers || {};
 
-    //if not GET, content-type=json, cookie=xsrftoken
-    if (options.method.toUpperCase() !== 'GET') {
-        options.headers['Content-Type'] = options.headers['Content-Type'] || 'application/json';
-        options.headers['XSRF-Token'] = Cookies.get('XSRF-TOKEN');
+    // if the options.method is not 'GET', then set the "Content-Type" header to
+    // "application/json", and set the "XSRF-TOKEN" header to the value of the
+    // "XSRF-TOKEN" cookie
+    if (options.method.toUpperCase() !== "GET") {
+        options.headers["Content-Type"] =
+            options.headers["Content-Type"] || "application/json";
+        options.headers["XSRF-Token"] = Cookies.get("XSRF-TOKEN");
     }
-
-    //MAKE THE FETCH CALL
+    // call the default window's fetch with the url and the options passed in
     const res = await window.fetch(url, options);
 
-
-    //error handling
+    // if the response status code is 400 or above, then throw an error with the
+    // error being the response
     if (res.status >= 400) throw res;
 
-    //RETURN SUCCESSFUL RESPONSE
+    // if the response status code is under 400, then return the response to the
+    // next promise chain
     return res;
 }
 
-
+// call this to get the "XSRF-TOKEN" cookie, should only be used in development
 export function restoreCSRF() {
-    return csrfFetch('/api/csrf/restore');
+    return csrfFetch("/api/csrf/restore");
 }
