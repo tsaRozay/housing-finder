@@ -2,12 +2,13 @@
   display: flex;
   align-items: center;
   background: none;
-  border: 1px solid white;
+  border: 2px solid white;
   border-radius: 20px;
   cursor: pointer;
   color: #eeeaea;
   font-size: 24px;
   position: relative;
+  margin: 10px;
 }
 
 .profile-button:hover {
