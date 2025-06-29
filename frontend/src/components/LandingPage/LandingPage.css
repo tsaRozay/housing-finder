@@ -17,7 +17,7 @@ body {
     justify-content: space-between;
     align-items: stretch;
     padding: 0px;
-    background-color: orange;
+    background-color: rgba(35, 34, 31, 0.994);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .spot-link {
@@ -81,4 +81,5 @@ body {
 .spot-price {
     font-size: 18px;
     font-weight: bold;
+    margin: 0px;
 }

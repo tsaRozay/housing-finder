@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
-import { GiHouse } from "react-icons/gi";
+import { FcUnlock} from "react-icons/fc";
 import "./Navigation.css";
 
 function Navigation({ isLoaded }) {
@@ -12,7 +12,7 @@ function Navigation({ isLoaded }) {
       <nav className="navbar">
         <div className="nav-left">
           <NavLink to="/" className="home-logo">
-            <GiHouse size={35} color="#000000" />
+            <FcUnlock size={35} color="#000000" />
           </NavLink>
           <NavLink to="/" className="title">Housing Finder</NavLink>
         </div>
